@@ -6,18 +6,23 @@ package com.travelling.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,6 +38,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CbrCase.findByEndTime", query = "SELECT c FROM CbrCase c WHERE c.endTime = :endTime"),
     @NamedQuery(name = "CbrCase.findByMoney", query = "SELECT c FROM CbrCase c WHERE c.money = :money")})
 public class CbrCase implements Serializable {
+    @Column(name = "successful")
+    private Boolean successful;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
+    private List<CbrCaseAttraction> cbrCaseAttractionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
+    private List<CbrCaseXCategory> cbrCaseXCategoryList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -110,6 +121,32 @@ public class CbrCase implements Serializable {
     @Override
     public String toString() {
         return "com.travelling.entity.CbrCase[ id=" + id + " ]";
+    }
+
+    public Boolean getSuccessful() {
+        return successful;
+    }
+
+    public void setSuccessful(Boolean successful) {
+        this.successful = successful;
+    }
+
+    @XmlTransient
+    public List<CbrCaseAttraction> getCbrCaseAttractionList() {
+        return cbrCaseAttractionList;
+    }
+
+    public void setCbrCaseAttractionList(List<CbrCaseAttraction> cbrCaseAttractionList) {
+        this.cbrCaseAttractionList = cbrCaseAttractionList;
+    }
+
+    @XmlTransient
+    public List<CbrCaseXCategory> getCbrCaseXCategoryList() {
+        return cbrCaseXCategoryList;
+    }
+
+    public void setCbrCaseXCategoryList(List<CbrCaseXCategory> cbrCaseXCategoryList) {
+        this.cbrCaseXCategoryList = cbrCaseXCategoryList;
     }
     
 }
