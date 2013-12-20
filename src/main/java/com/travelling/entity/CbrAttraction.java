@@ -42,6 +42,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrAttraction.findByOpeningTime", query = "SELECT c FROM CbrAttraction c WHERE c.openingTime = :openingTime"),
     @NamedQuery(name = "CbrAttraction.findByClosingTime", query = "SELECT c FROM CbrAttraction c WHERE c.closingTime = :closingTime")})
 public class CbrAttraction implements Serializable {
+    @Column(name = "visit_duration")
+    private Integer visitDuration;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction", fetch = FetchType.LAZY)
+    private List<CbrDayAttraction> cbrDayAttractionList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,9 +57,6 @@ public class CbrAttraction implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "name")
     private String name;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "visit_duration")
-    private Double visitDuration;
     @Column(name = "visit_cost")
     private Double visitCost;
     @Column(name = "opening_time")
@@ -64,8 +65,6 @@ public class CbrAttraction implements Serializable {
     @Column(name = "closing_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date closingTime;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction", fetch = FetchType.LAZY)
-    private List<CbrCaseAttraction> cbrCaseAttractionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction", fetch = FetchType.LAZY)
     private List<CbrAttractionXCategory> cbrAttractionXCategoryList;
 
@@ -97,14 +96,6 @@ public class CbrAttraction implements Serializable {
         this.name = name;
     }
 
-    public Double getVisitDuration() {
-        return visitDuration;
-    }
-
-    public void setVisitDuration(Double visitDuration) {
-        this.visitDuration = visitDuration;
-    }
-
     public Double getVisitCost() {
         return visitCost;
     }
@@ -127,15 +118,6 @@ public class CbrAttraction implements Serializable {
 
     public void setClosingTime(Date closingTime) {
         this.closingTime = closingTime;
-    }
-
-    @XmlTransient
-    public List<CbrCaseAttraction> getCbrCaseAttractionList() {
-        return cbrCaseAttractionList;
-    }
-
-    public void setCbrCaseAttractionList(List<CbrCaseAttraction> cbrCaseAttractionList) {
-        this.cbrCaseAttractionList = cbrCaseAttractionList;
     }
 
     @XmlTransient
@@ -170,6 +152,23 @@ public class CbrAttraction implements Serializable {
     @Override
     public String toString() {
         return "com.travelling.entity.CbrAttraction[ id=" + id + " ]";
+    }
+
+    public Integer getVisitDuration() {
+        return visitDuration;
+    }
+
+    public void setVisitDuration(Integer visitDuration) {
+        this.visitDuration = visitDuration;
+    }
+
+    @XmlTransient
+    public List<CbrDayAttraction> getCbrDayAttractionList() {
+        return cbrDayAttractionList;
+    }
+
+    public void setCbrDayAttractionList(List<CbrDayAttraction> cbrDayAttractionList) {
+        this.cbrDayAttractionList = cbrDayAttractionList;
     }
     
 }

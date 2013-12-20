@@ -25,14 +25,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Stefan
  */
 @Entity
-@Table(name = "cbr_case_x_category")
+@Table(name = "cbr_day_attraction")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CbrCaseXCategory.findAll", query = "SELECT c FROM CbrCaseXCategory c"),
-    @NamedQuery(name = "CbrCaseXCategory.findById", query = "SELECT c FROM CbrCaseXCategory c WHERE c.id = :id"),
-    @NamedQuery(name = "CbrCaseXCategory.findByCase", query = "SELECT c FROM CbrCaseXCategory c WHERE c.fkCase = :case"),
-    @NamedQuery(name = "CbrCaseXCategory.findByWeight", query = "SELECT c FROM CbrCaseXCategory c WHERE c.weight = :weight")})
-public class CbrCaseXCategory implements Serializable {
+    @NamedQuery(name = "CbrDayAttraction.findAll", query = "SELECT c FROM CbrDayAttraction c"),
+    @NamedQuery(name = "CbrDayAttraction.findById", query = "SELECT c FROM CbrDayAttraction c WHERE c.id = :id"),
+    @NamedQuery(name = "CbrDayAttraction.findByDay", query = "SELECT c FROM CbrDayAttraction c WHERE c.fkDay = :day ORDER BY c.position"),
+    @NamedQuery(name = "CbrDayAttraction.findByPosition", query = "SELECT c FROM CbrDayAttraction c WHERE c.position = :position")})
+public class CbrDayAttraction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,25 +41,25 @@ public class CbrCaseXCategory implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "weight")
-    private double weight;
-    @JoinColumn(name = "fk_category", referencedColumnName = "id")
+    @Column(name = "position")
+    private int position;
+    @JoinColumn(name = "fk_day", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CbrCategory fkCategory;
-    @JoinColumn(name = "fk_case", referencedColumnName = "id")
+    private CbrDay fkDay;
+    @JoinColumn(name = "fk_attraction", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CbrCase fkCase;
+    private CbrAttraction fkAttraction;
 
-    public CbrCaseXCategory() {
+    public CbrDayAttraction() {
     }
 
-    public CbrCaseXCategory(Integer id) {
+    public CbrDayAttraction(Integer id) {
         this.id = id;
     }
 
-    public CbrCaseXCategory(Integer id, double weight) {
+    public CbrDayAttraction(Integer id, int position) {
         this.id = id;
-        this.weight = weight;
+        this.position = position;
     }
 
     public Integer getId() {
@@ -70,28 +70,28 @@ public class CbrCaseXCategory implements Serializable {
         this.id = id;
     }
 
-    public double getWeight() {
-        return weight;
+    public int getPosition() {
+        return position;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setPosition(int position) {
+        this.position = position;
     }
 
-    public CbrCategory getFkCategory() {
-        return fkCategory;
+    public CbrDay getFkDay() {
+        return fkDay;
     }
 
-    public void setFkCategory(CbrCategory fkCategory) {
-        this.fkCategory = fkCategory;
+    public void setFkDay(CbrDay fkDay) {
+        this.fkDay = fkDay;
     }
 
-    public CbrCase getFkCase() {
-        return fkCase;
+    public CbrAttraction getFkAttraction() {
+        return fkAttraction;
     }
 
-    public void setFkCase(CbrCase fkCase) {
-        this.fkCase = fkCase;
+    public void setFkAttraction(CbrAttraction fkAttraction) {
+        this.fkAttraction = fkAttraction;
     }
 
     @Override
@@ -104,10 +104,10 @@ public class CbrCaseXCategory implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CbrCaseXCategory)) {
+        if (!(object instanceof CbrDayAttraction)) {
             return false;
         }
-        CbrCaseXCategory other = (CbrCaseXCategory) object;
+        CbrDayAttraction other = (CbrDayAttraction) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -116,7 +116,7 @@ public class CbrCaseXCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "com.travelling.entity.CbrCaseXCategory[ id=" + id + " ]";
+        return "com.travelling.entity.CbrDayAttraction[ id=" + id + " ]";
     }
     
 }

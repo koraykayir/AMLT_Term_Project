@@ -4,6 +4,7 @@
  */
 package com.travelling.dao;
 
+import com.travelling.entity.CbrCase;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

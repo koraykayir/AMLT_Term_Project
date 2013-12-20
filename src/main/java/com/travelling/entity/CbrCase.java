@@ -38,10 +38,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrCase.findByEndTime", query = "SELECT c FROM CbrCase c WHERE c.endTime = :endTime"),
     @NamedQuery(name = "CbrCase.findByMoney", query = "SELECT c FROM CbrCase c WHERE c.money = :money")})
 public class CbrCase implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
+    private List<CbrDay> cbrDayList;
     @Column(name = "successful")
     private Boolean successful;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
-    private List<CbrCaseAttraction> cbrCaseAttractionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
     private List<CbrCaseXCategory> cbrCaseXCategoryList;
     private static final long serialVersionUID = 1L;
@@ -132,21 +132,21 @@ public class CbrCase implements Serializable {
     }
 
     @XmlTransient
-    public List<CbrCaseAttraction> getCbrCaseAttractionList() {
-        return cbrCaseAttractionList;
-    }
-
-    public void setCbrCaseAttractionList(List<CbrCaseAttraction> cbrCaseAttractionList) {
-        this.cbrCaseAttractionList = cbrCaseAttractionList;
-    }
-
-    @XmlTransient
     public List<CbrCaseXCategory> getCbrCaseXCategoryList() {
         return cbrCaseXCategoryList;
     }
 
     public void setCbrCaseXCategoryList(List<CbrCaseXCategory> cbrCaseXCategoryList) {
         this.cbrCaseXCategoryList = cbrCaseXCategoryList;
+    }
+
+    @XmlTransient
+    public List<CbrDay> getCbrDayList() {
+        return cbrDayList;
+    }
+
+    public void setCbrDayList(List<CbrDay> cbrDayList) {
+        this.cbrDayList = cbrDayList;
     }
     
 }

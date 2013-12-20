@@ -5,7 +5,10 @@
 package com.travelling.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,50 +19,57 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Stefan
  */
 @Entity
-@Table(name = "cbr_case_x_category")
+@Table(name = "cbr_day")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CbrCaseXCategory.findAll", query = "SELECT c FROM CbrCaseXCategory c"),
-    @NamedQuery(name = "CbrCaseXCategory.findById", query = "SELECT c FROM CbrCaseXCategory c WHERE c.id = :id"),
-    @NamedQuery(name = "CbrCaseXCategory.findByCase", query = "SELECT c FROM CbrCaseXCategory c WHERE c.fkCase = :case"),
-    @NamedQuery(name = "CbrCaseXCategory.findByWeight", query = "SELECT c FROM CbrCaseXCategory c WHERE c.weight = :weight")})
-public class CbrCaseXCategory implements Serializable {
+    @NamedQuery(name = "CbrDay.findAll", query = "SELECT c FROM CbrDay c"),
+    @NamedQuery(name = "CbrDay.findById", query = "SELECT c FROM CbrDay c WHERE c.id = :id"),
+    @NamedQuery(name = "CbrDay.findByCase", query = "SELECT c FROM CbrDay c WHERE c.fkCase = :case ORDER BY c.position"),
+    @NamedQuery(name = "CbrDay.findByStartingTime", query = "SELECT c FROM CbrDay c WHERE c.startingTime = :startingTime"),
+    @NamedQuery(name = "CbrDay.findByPosition", query = "SELECT c FROM CbrDay c WHERE c.position = :position")})
+public class CbrDay implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "starting_time")
+    @Temporal(TemporalType.TIME)
+    private Date startingTime;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "weight")
-    private double weight;
-    @JoinColumn(name = "fk_category", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CbrCategory fkCategory;
+    @Column(name = "position")
+    private int position;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkDay", fetch = FetchType.LAZY)
+    private List<CbrDayAttraction> cbrDayAttractionList;
     @JoinColumn(name = "fk_case", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CbrCase fkCase;
 
-    public CbrCaseXCategory() {
+    public CbrDay() {
     }
 
-    public CbrCaseXCategory(Integer id) {
+    public CbrDay(Integer id) {
         this.id = id;
     }
 
-    public CbrCaseXCategory(Integer id, double weight) {
+    public CbrDay(Integer id, int position) {
         this.id = id;
-        this.weight = weight;
+        this.position = position;
     }
 
     public Integer getId() {
@@ -70,20 +80,29 @@ public class CbrCaseXCategory implements Serializable {
         this.id = id;
     }
 
-    public double getWeight() {
-        return weight;
+    public Date getStartingTime() {
+        return startingTime;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setStartingTime(Date startingTime) {
+        this.startingTime = startingTime;
     }
 
-    public CbrCategory getFkCategory() {
-        return fkCategory;
+    public int getPosition() {
+        return position;
     }
 
-    public void setFkCategory(CbrCategory fkCategory) {
-        this.fkCategory = fkCategory;
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    @XmlTransient
+    public List<CbrDayAttraction> getCbrDayAttractionList() {
+        return cbrDayAttractionList;
+    }
+
+    public void setCbrDayAttractionList(List<CbrDayAttraction> cbrDayAttractionList) {
+        this.cbrDayAttractionList = cbrDayAttractionList;
     }
 
     public CbrCase getFkCase() {
@@ -104,10 +123,10 @@ public class CbrCaseXCategory implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CbrCaseXCategory)) {
+        if (!(object instanceof CbrDay)) {
             return false;
         }
-        CbrCaseXCategory other = (CbrCaseXCategory) object;
+        CbrDay other = (CbrDay) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -116,7 +135,7 @@ public class CbrCaseXCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "com.travelling.entity.CbrCaseXCategory[ id=" + id + " ]";
+        return "com.travelling.entity.CbrDay[ id=" + id + " ]";
     }
     
 }

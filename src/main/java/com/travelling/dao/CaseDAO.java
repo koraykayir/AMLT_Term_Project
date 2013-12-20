@@ -17,8 +17,11 @@ import java.util.logging.Logger;
  */
 
 public class CaseDAO extends AbstractDAOImpl<CbrCase>{
-    private static final Logger LOGGER = Logger.getLogger(CbrCase.class.getName());
+    public static final CaseDAO instance = new CaseDAO();
     
-    
+    private CaseDAO() {
         
+    }    
+    
+    
 }
