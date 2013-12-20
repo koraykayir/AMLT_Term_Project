@@ -140,6 +140,20 @@ public class Case {
         c.setStartTime(startTime);
         c.setEndTime(endTime);
         c.setMoney(money);
+        
+        for (Map.Entry<CbrCategory, Double> e : preferences.entrySet()) {
+            CbrCaseXCategory cxc = new CbrCaseXCategory();
+            cxc.setFkCase(c);
+            cxc.setFkCategory(e.getKey());
+            cxc.setWeight(e.getValue());
+        }
+        
+        int p = 1;
+        for (Day day : days) {
+            boolean ok = day.save(c, p++);
+            if (!ok) return false;
+        }
+        
         try {
             c = CaseDAO.instance.update(c);
             id = c.getId();
@@ -147,19 +161,7 @@ public class Case {
         catch (Exception ex) {
             return false;
         }
-        for (Map.Entry<CbrCategory, Double> e : preferences.entrySet()) {
-            CbrCaseXCategory cxc = new CbrCaseXCategory();
-            cxc.setFkCase(c);
-            cxc.setFkCategory(e.getKey());
-            cxc.setWeight(e.getValue());
-            try {
-                CaseXCategoryDAO.instance.update(cxc);
-            }
-            catch (Exception ex) {
-                CaseDAO.instance.delete(c.getId());
-                return false;
-            }
-        }
+             
         return true;
     }
     

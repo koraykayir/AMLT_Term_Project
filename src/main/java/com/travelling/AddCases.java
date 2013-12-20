@@ -4,15 +4,20 @@
  */
 package com.travelling;
 
+import com.travelling.dao.AttractionDAO;
 import com.travelling.dao.CaseDAO;
 import com.travelling.dao.CategoryDAO;
+import com.travelling.entity.CbrAttraction;
 import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrCategory;
 import com.travelling.pojo.Case;
+import com.travelling.pojo.Day;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +55,25 @@ public class AddCases {
         preferences.put(CategoryDAO.instance.find(22), 1.); //Architectural
         
         c.setPreferences(preferences);
+        
+        List<Day> days = new LinkedList<Day>();
+        List<CbrAttraction> attractions;
+        Day day;
+        
+        day = new Day();
+        day.setStartTime(sdf.parse("9:00"));
+        attractions = new LinkedList<CbrAttraction>();
+        attractions.add(AttractionDAO.instance.find(5));
+        attractions.add(AttractionDAO.instance.find(17));
+        attractions.add(AttractionDAO.instance.find(35));
+        attractions.add(AttractionDAO.instance.find(20));
+        attractions.add(AttractionDAO.instance.find(31));
+        attractions.add(AttractionDAO.instance.find(37));
+        attractions.add(AttractionDAO.instance.find(32));
+        day.setAttractions(attractions);
+        days.add(day);
+        
+        c.setDays(days);
         System.out.println("Saving..");
         if (c.save()) System.out.println("done");
         else System.out.println("failed");
