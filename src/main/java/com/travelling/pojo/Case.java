@@ -4,6 +4,7 @@
  */
 package com.travelling.pojo;
 
+import com.travelling.dao.CaseDAO;
 import com.travelling.dao.CaseXCategoryDAO;
 import com.travelling.dao.DayDAO;
 import com.travelling.entity.CbrCase;
@@ -129,6 +130,37 @@ public class Case {
      */
     public void setDays(List<Day> days) {
         this.days = days;
+    }
+    
+    public boolean save() {
+        CbrCase c;
+        if (id == null) c = new CbrCase();
+        else c = CaseDAO.instance.find(id);
+        if (c == null) return false;
+        c.setStartTime(startTime);
+        c.setEndTime(endTime);
+        c.setMoney(money);
+        try {
+            c = CaseDAO.instance.update(c);
+            id = c.getId();
+        }
+        catch (Exception ex) {
+            return false;
+        }
+        for (Map.Entry<CbrCategory, Double> e : preferences.entrySet()) {
+            CbrCaseXCategory cxc = new CbrCaseXCategory();
+            cxc.setFkCase(c);
+            cxc.setFkCategory(e.getKey());
+            cxc.setWeight(e.getValue());
+            try {
+                CaseXCategoryDAO.instance.update(cxc);
+            }
+            catch (Exception ex) {
+                CaseDAO.instance.delete(c.getId());
+                return false;
+            }
+        }
+        return true;
     }
     
 }

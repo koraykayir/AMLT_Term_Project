@@ -42,10 +42,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrAttraction.findByOpeningTime", query = "SELECT c FROM CbrAttraction c WHERE c.openingTime = :openingTime"),
     @NamedQuery(name = "CbrAttraction.findByClosingTime", query = "SELECT c FROM CbrAttraction c WHERE c.closingTime = :closingTime")})
 public class CbrAttraction implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction", fetch = FetchType.LAZY)
+    private List<CbrDayXAttraction> cbrDayXAttractionList;
     @Column(name = "visit_duration")
     private Integer visitDuration;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction", fetch = FetchType.LAZY)
-    private List<CbrDayAttraction> cbrDayAttractionList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -163,12 +163,12 @@ public class CbrAttraction implements Serializable {
     }
 
     @XmlTransient
-    public List<CbrDayAttraction> getCbrDayAttractionList() {
-        return cbrDayAttractionList;
+    public List<CbrDayXAttraction> getCbrDayXAttractionList() {
+        return cbrDayXAttractionList;
     }
 
-    public void setCbrDayAttractionList(List<CbrDayAttraction> cbrDayAttractionList) {
-        this.cbrDayAttractionList = cbrDayAttractionList;
+    public void setCbrDayXAttractionList(List<CbrDayXAttraction> cbrDayXAttractionList) {
+        this.cbrDayXAttractionList = cbrDayXAttractionList;
     }
     
 }

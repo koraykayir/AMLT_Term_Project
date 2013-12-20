@@ -25,14 +25,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Stefan
  */
 @Entity
-@Table(name = "cbr_day_attraction")
+@Table(name = "cbr_day_x_attraction")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CbrDayAttraction.findAll", query = "SELECT c FROM CbrDayAttraction c"),
-    @NamedQuery(name = "CbrDayAttraction.findById", query = "SELECT c FROM CbrDayAttraction c WHERE c.id = :id"),
-    @NamedQuery(name = "CbrDayAttraction.findByDay", query = "SELECT c FROM CbrDayAttraction c WHERE c.fkDay = :day ORDER BY c.position"),
-    @NamedQuery(name = "CbrDayAttraction.findByPosition", query = "SELECT c FROM CbrDayAttraction c WHERE c.position = :position")})
-public class CbrDayAttraction implements Serializable {
+    @NamedQuery(name = "CbrDayXAttraction.findAll", query = "SELECT c FROM CbrDayXAttraction c"),
+    @NamedQuery(name = "CbrDayXAttraction.findById", query = "SELECT c FROM CbrDayXAttraction c WHERE c.id = :id"),
+    @NamedQuery(name = "CbrDayXAttraction.findByDay", query = "SELECT c FROM CbrDayXAttraction c WHERE c.fkDay = :day ORDER BY c.position"),
+    @NamedQuery(name = "CbrDayXAttraction.findByPosition", query = "SELECT c FROM CbrDayXAttraction c WHERE c.position = :position")})
+public class CbrDayXAttraction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,14 +50,14 @@ public class CbrDayAttraction implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CbrAttraction fkAttraction;
 
-    public CbrDayAttraction() {
+    public CbrDayXAttraction() {
     }
 
-    public CbrDayAttraction(Integer id) {
+    public CbrDayXAttraction(Integer id) {
         this.id = id;
     }
 
-    public CbrDayAttraction(Integer id, int position) {
+    public CbrDayXAttraction(Integer id, int position) {
         this.id = id;
         this.position = position;
     }
@@ -104,10 +104,10 @@ public class CbrDayAttraction implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CbrDayAttraction)) {
+        if (!(object instanceof CbrDayXAttraction)) {
             return false;
         }
-        CbrDayAttraction other = (CbrDayAttraction) object;
+        CbrDayXAttraction other = (CbrDayXAttraction) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -116,7 +116,7 @@ public class CbrDayAttraction implements Serializable {
 
     @Override
     public String toString() {
-        return "com.travelling.entity.CbrDayAttraction[ id=" + id + " ]";
+        return "com.travelling.entity.CbrDayXAttraction[ id=" + id + " ]";
     }
     
 }

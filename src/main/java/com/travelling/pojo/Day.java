@@ -7,7 +7,7 @@ package com.travelling.pojo;
 import com.travelling.dao.DayXAttractionDAO;
 import com.travelling.entity.CbrAttraction;
 import com.travelling.entity.CbrDay;
-import com.travelling.entity.CbrDayAttraction;
+import com.travelling.entity.CbrDayXAttraction;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Day {
     
     public Day(CbrDay day) {
         startTime = day.getStartingTime();
-        for (CbrDayAttraction dxa : DayXAttractionDAO.instance.findByDay(day)) {
+        for (CbrDayXAttraction dxa : DayXAttractionDAO.instance.findByDay(day)) {
             attractions.add(dxa.getFkAttraction());
         }
     }

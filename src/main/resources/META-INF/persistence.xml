@@ -8,6 +8,9 @@
     <class>com.travelling.entity.CbrCategory</class>
     <class>com.travelling.entity.CbrAttraction</class>
     <class>com.travelling.entity.CbrCaseXCategory</class>
+    <class>com.travelling.entity.CbrDay</class>
+    <class>com.travelling.entity.CbrDayAttraction</class>
+    <class>com.travelling.entity.CbrDayXAttraction</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/travelling"/>
       <property name="javax.persistence.jdbc.password" value="root"/>

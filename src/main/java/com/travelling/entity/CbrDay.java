@@ -41,6 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrDay.findByStartingTime", query = "SELECT c FROM CbrDay c WHERE c.startingTime = :startingTime"),
     @NamedQuery(name = "CbrDay.findByPosition", query = "SELECT c FROM CbrDay c WHERE c.position = :position")})
 public class CbrDay implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkDay", fetch = FetchType.LAZY)
+    private List<CbrDayXAttraction> cbrDayXAttractionList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,8 +56,6 @@ public class CbrDay implements Serializable {
     @NotNull
     @Column(name = "position")
     private int position;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkDay", fetch = FetchType.LAZY)
-    private List<CbrDayAttraction> cbrDayAttractionList;
     @JoinColumn(name = "fk_case", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CbrCase fkCase;
@@ -96,15 +96,6 @@ public class CbrDay implements Serializable {
         this.position = position;
     }
 
-    @XmlTransient
-    public List<CbrDayAttraction> getCbrDayAttractionList() {
-        return cbrDayAttractionList;
-    }
-
-    public void setCbrDayAttractionList(List<CbrDayAttraction> cbrDayAttractionList) {
-        this.cbrDayAttractionList = cbrDayAttractionList;
-    }
-
     public CbrCase getFkCase() {
         return fkCase;
     }
@@ -136,6 +127,15 @@ public class CbrDay implements Serializable {
     @Override
     public String toString() {
         return "com.travelling.entity.CbrDay[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public List<CbrDayXAttraction> getCbrDayXAttractionList() {
+        return cbrDayXAttractionList;
+    }
+
+    public void setCbrDayXAttractionList(List<CbrDayXAttraction> cbrDayXAttractionList) {
+        this.cbrDayXAttractionList = cbrDayXAttractionList;
     }
     
 }
