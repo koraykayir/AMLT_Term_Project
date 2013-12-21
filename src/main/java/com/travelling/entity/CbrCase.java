@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,6 +39,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrCase.findByEndTime", query = "SELECT c FROM CbrCase c WHERE c.endTime = :endTime"),
     @NamedQuery(name = "CbrCase.findByMoney", query = "SELECT c FROM CbrCase c WHERE c.money = :money")})
 public class CbrCase implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "days")
+    private int days;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
     private List<CbrDay> cbrDayList;
     @Column(name = "successful")
@@ -147,6 +152,14 @@ public class CbrCase implements Serializable {
 
     public void setCbrDayList(List<CbrDay> cbrDayList) {
         this.cbrDayList = cbrDayList;
+    }
+
+    public int getDays() {
+        return days;
+    }
+
+    public void setDays(int days) {
+        this.days = days;
     }
     
 }

@@ -33,6 +33,7 @@ public class AddCases {
         c.setStartTime(sdf.parse("9:00"));
         c.setEndTime(sdf.parse("21:00"));
         c.setMoney(50);
+        c.setNumberOfDays(1);
         //System.out.println(c.getId());
         Map<CbrCategory, Double> preferences = new HashMap<CbrCategory, Double>();
         preferences.put(CategoryDAO.instance.find(8), 0.); //Art

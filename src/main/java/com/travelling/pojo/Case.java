@@ -26,6 +26,7 @@ public class Case {
     private Date startTime;
     private Date endTime;
     private Integer money;
+    private Integer numberOfDays;
     private Map<CbrCategory, Double> preferences = new HashMap<CbrCategory, Double>();
     private List<Day> days = new LinkedList<Day>();
     
@@ -38,6 +39,7 @@ public class Case {
         startTime = c.getStartTime();
         endTime = c.getEndTime();
         money = c.getMoney();
+        numberOfDays = c.getDays();
         
         for (CbrCaseXCategory cxc : CaseXCategoryDAO.instance.findByCase(c)) {
             preferences.put(cxc.getFkCategory(), cxc.getWeight());
@@ -140,6 +142,7 @@ public class Case {
         c.setStartTime(startTime);
         c.setEndTime(endTime);
         c.setMoney(money);
+        c.setDays(getNumberOfDays());
         
         for (Map.Entry<CbrCategory, Double> e : preferences.entrySet()) {
             CbrCaseXCategory cxc = new CbrCaseXCategory();
@@ -163,6 +166,20 @@ public class Case {
         }
              
         return true;
+    }
+
+    /**
+     * @return the numberOfDays
+     */
+    public Integer getNumberOfDays() {
+        return numberOfDays;
+    }
+
+    /**
+     * @param numberOfDays the numberOfDays to set
+     */
+    public void setNumberOfDays(Integer numberOfDays) {
+        this.numberOfDays = numberOfDays;
     }
     
 }
