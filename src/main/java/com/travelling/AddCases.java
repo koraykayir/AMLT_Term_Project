@@ -10,7 +10,7 @@ import com.travelling.dao.CategoryDAO;
 import com.travelling.entity.CbrAttraction;
 import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrCategory;
-import com.travelling.pojo.Case;
+import com.travelling.pojo.TravellingCase;
 import com.travelling.pojo.Day;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +29,7 @@ public class AddCases {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("H:m");
     
     public static void main(String[] args) throws ParseException {
-        Case c = new Case();
+        TravellingCase c = new TravellingCase();
         c.setStartTime(sdf.parse("9:00"));
         c.setEndTime(sdf.parse("21:00"));
         c.setMoney(50);

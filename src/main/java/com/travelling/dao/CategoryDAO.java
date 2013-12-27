@@ -5,6 +5,8 @@
 package com.travelling.dao;
 
 import com.travelling.entity.CbrCategory;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -15,6 +17,10 @@ public class CategoryDAO extends AbstractDAOImpl<CbrCategory>{
     
     private CategoryDAO() {
         
+    }
+    
+    public List<CbrCategory> findLeaves() {
+        return instance.findByNamedQuery("CbrCategory.findLeaves", new HashMap<String, Object>());
     }
     
 }

@@ -35,6 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "CbrCategory.findAll", query = "SELECT c FROM CbrCategory c"),
     @NamedQuery(name = "CbrCategory.findById", query = "SELECT c FROM CbrCategory c WHERE c.id = :id"),
+    @NamedQuery(name = "CbrCategory.findLeaves", query = "SELECT c FROM CbrCategory c WHERE NOT EXISTS "
+        + "(SELECT child FROM CbrCategory child WHERE child.fkParent = c"),
     @NamedQuery(name = "CbrCategory.findByName", query = "SELECT c FROM CbrCategory c WHERE c.name = :name")})
 public class CbrCategory implements Serializable {
     private static final long serialVersionUID = 1L;

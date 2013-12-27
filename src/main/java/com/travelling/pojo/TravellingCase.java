@@ -6,12 +6,16 @@ package com.travelling.pojo;
 
 import com.travelling.dao.CaseDAO;
 import com.travelling.dao.CaseXCategoryDAO;
+import com.travelling.dao.CategoryDAO;
 import com.travelling.dao.DayDAO;
 import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrCaseXCategory;
 import com.travelling.entity.CbrCategory;
 import com.travelling.entity.CbrDay;
+import com.travelling.library.Case;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +25,7 @@ import java.util.Map;
  *
  * @author Stefan
  */
-public class Case {
+public class TravellingCase implements Case{
     private Integer id;
     private Date startTime;
     private Date endTime;
@@ -30,11 +34,11 @@ public class Case {
     private Map<CbrCategory, Double> preferences = new HashMap<CbrCategory, Double>();
     private List<Day> days = new LinkedList<Day>();
     
-    public Case() {
+    public TravellingCase() {
         
     }
     
-    public Case(CbrCase c) {
+    public TravellingCase(CbrCase c) {
         id = c.getId();
         startTime = c.getStartTime();
         endTime = c.getEndTime();
@@ -134,6 +138,7 @@ public class Case {
         this.days = days;
     }
     
+    @Override
     public boolean save() {
         CbrCase c;
         if (id == null) c = new CbrCase();
@@ -180,6 +185,81 @@ public class Case {
      */
     public void setNumberOfDays(Integer numberOfDays) {
         this.numberOfDays = numberOfDays;
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        switch (name.toLowerCase()) {
+            case "money":
+                return money;
+            case "days":
+                return numberOfDays;
+            case "starttime":
+                return startTime;
+            case "endtime":
+                return endTime;
+            case "interval":
+                Calendar c1 = new GregorianCalendar();
+                c1.setTime(startTime);
+                Calendar c2 = new GregorianCalendar();
+                c2.setTime(endTime);
+                int minutes1 = c1.get(Calendar.HOUR_OF_DAY) * 60 + c1.get(Calendar.MINUTE);
+                int minutes2 = c2.get(Calendar.HOUR_OF_DAY) * 60 + c2.get(Calendar.MINUTE);
+                return minutes2 - minutes1 + (numberOfDays - 1) * 24 * 60;
+            default:
+                int categoryId;
+                try {
+                    categoryId = Integer.parseInt(name);
+                }
+                catch (NumberFormatException ex) {
+                    return null;
+                }
+                CbrCategory category = CategoryDAO.instance.find(categoryId);
+                if (category == null) return null;
+                return preferences.get(category);
+        }
+    }
+
+    @Override
+    public void setAttribute(String name, Object value) throws ClassCastException, IllegalArgumentException {
+        switch (name.toLowerCase()) {
+            case "money":
+                if (!(value instanceof Integer))
+                    throw new ClassCastException();
+                money = (Integer)value;
+                break;
+            case "days":
+                if (!(value instanceof Integer))
+                    throw new ClassCastException();
+                numberOfDays = (Integer)value;
+                break;
+            case "starttime":
+                if (!(value instanceof Date))
+                    throw new ClassCastException();
+                startTime = (Date)value;
+                break;
+            case "endtime":
+                if (!(value instanceof Date))
+                    throw new ClassCastException();
+                endTime = (Date)value;
+                break;
+            case "interval":
+                break;
+            default:
+                int categoryId;
+                try {
+                    categoryId = Integer.parseInt(name);
+                }
+                catch (NumberFormatException ex) {
+                    throw new IllegalArgumentException();
+                }
+                CbrCategory category = CategoryDAO.instance.find(categoryId);
+                if (category == null) 
+                    throw new IllegalArgumentException();
+                if (!(value instanceof Double))
+                    throw new ClassCastException();
+                preferences.put(category, (Double)value);
+        }
     }
     
 }
