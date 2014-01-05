@@ -367,11 +367,11 @@ public class AddCases {
     }
     
     public static void main(String[] args) throws ParseException {
-//        addGeneralExampleOneDay();
-//        addGeneralExampleHalfDay();
-//        addGaudi();
-//        addReligious();
-//        addKids();
-//        addLandmarks();
+        addGeneralExampleOneDay();
+        addGeneralExampleHalfDay();
+        addGaudi();
+        addReligious();
+        addKids();
+        addLandmarks();
     }
 }

@@ -31,8 +31,8 @@ public class TravellingCase implements Case{
     private Date endTime;
     private Integer money;
     private Integer numberOfDays;
-    private Map<CbrCategory, Double> preferences = new HashMap<CbrCategory, Double>();
-    private List<Day> days = new LinkedList<Day>();
+    private Map<CbrCategory, Double> preferences = new HashMap<>();
+    private List<Day> days = new LinkedList<>();
     
     public TravellingCase() {
         
@@ -148,19 +148,18 @@ public class TravellingCase implements Case{
         c.setEndTime(endTime);
         c.setMoney(money);
         c.setDays(getNumberOfDays());
+        c.setCbrCaseXCategoryList(new LinkedList<CbrCaseXCategory>());
         
+        
+        //List<CbrCaseXCategory> cxcList = new LinkedList<>();
         for (Map.Entry<CbrCategory, Double> e : preferences.entrySet()) {
             CbrCaseXCategory cxc = new CbrCaseXCategory();
             cxc.setFkCase(c);
             cxc.setFkCategory(e.getKey());
             cxc.setWeight(e.getValue());
+            c.getCbrCaseXCategoryList().add(cxc);
         }
-        
-        int p = 1;
-        for (Day day : days) {
-            boolean ok = day.save(c, p++);
-            if (!ok) return false;
-        }
+        //CaseXCategoryDAO.instance.createAllIgnoreNullColumns(cxcList);
         
         try {
             c = CaseDAO.instance.update(c);
@@ -170,6 +169,13 @@ public class TravellingCase implements Case{
             return false;
         }
              
+        
+        int p = 1;
+        for (Day day : days) {
+            boolean ok = day.save(c, p++);
+            if (!ok) return false;
+        }
+        
         return true;
     }
 

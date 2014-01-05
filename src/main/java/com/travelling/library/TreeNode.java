@@ -21,13 +21,13 @@ public class TreeNode implements Serializable{
     private Map<Attribute.Interval, TreeNode> children = new HashMap<>();
     private int numberOfCases;
     private List<Integer> cases = null;
-    private Library library;
+    private transient Library library;
     
     public TreeNode(Library library, Set<Attribute<?>> attributes, List<Integer> cases) {
         this.library = library;
+        numberOfCases = cases.size();
         if (cases.size() <= Library.NEIGHBOURHOOD_SIZE) {
             this.cases = cases;
-            numberOfCases = cases.size();
             return;
         }
         double max = -1.;
@@ -78,5 +78,33 @@ public class TreeNode implements Serializable{
         if (children == null) return null;
         Attribute.Interval bin = attribute.getBin(c);
         return children.get(bin);
+    }
+    
+    public void setLibrary(Library library) {
+        this.library = library;
+        if (children != null) {
+            for (TreeNode child : children.values())
+                child.setLibrary(library);
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return print(0);
+    }
+    
+    public String print(int depth) {
+        String s = "";
+        for (int i = 0; i < depth; i++) s += "\t";
+        if (attribute == null) {
+            s += "leaf\n";
+            return s;
+        }
+        else s += attribute + "\n";
+        if (children == null) return s;
+        for (Attribute.Interval bin : attribute.getBins()) {
+            s += children.get(bin).print(depth + 1);
+        }
+        return s + "\n";
     }
 }
