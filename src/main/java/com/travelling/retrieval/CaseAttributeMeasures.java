@@ -58,7 +58,7 @@ public class CaseAttributeMeasures {
 	 * @param distance
 	 * @return normalized similarity
 	 */
-	public static double getSimilarity( Object x, Object y, Object max, Object min) {
+	public static double getSimilarity(Object x, Object y, Object max, Object min) {
 		double distance = CaseAttributeMeasures.getDistance(x, y);
 		double maxMinDistance = CaseAttributeMeasures.getDistance(max, min);
 		return (maxMinDistance - distance) / maxMinDistance;

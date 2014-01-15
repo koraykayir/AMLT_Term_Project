@@ -21,6 +21,7 @@ import com.travelling.dao.CategoryDAO;
 import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrCategory;
 import com.travelling.pojo.TravellingCase;
+import com.travelling.retrieval.CaseAttributeWeightAssessment;
 
 /**
  *
@@ -55,7 +56,10 @@ public class Library {
 			attribute.computeMinAndMaxValues(caseMap.values());
 		}
 		
-		// TODO(Claudia): compute weights
+		// Compute weights for attributes to be used in retrieval.
+		CaseAttributeWeightAssessment weightAssessment = new CaseAttributeWeightAssessment(
+				caseMap.values(), attributes.values());
+		weightAssessment.computeWeights();
     }
 
     

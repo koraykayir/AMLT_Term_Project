@@ -24,7 +24,7 @@ public class Attribute<T extends Comparable<T>> implements Serializable {
 	
 	private T min;
 	private T max;
-	private double weight;
+	private double weight = 1.0;
     
     private String name; 
     private List<Interval> bins = new LinkedList<>();

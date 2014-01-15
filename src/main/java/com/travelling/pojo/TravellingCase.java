@@ -278,4 +278,11 @@ public class TravellingCase implements Case{
 				other.getAttributeValue(attribute.getName()),
 				attribute.getMax(), attribute.getMin());
 	}
+
+	@Override
+	public double getDistanceForAttribute(Attribute<?> attribute, Case other) {
+		return CaseAttributeMeasures.getDistance(
+				getAttributeValue(attribute.getName()),
+				other.getAttributeValue(attribute.getName()));
+	}
 }

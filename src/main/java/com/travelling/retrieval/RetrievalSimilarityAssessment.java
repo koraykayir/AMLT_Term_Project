@@ -44,16 +44,18 @@ public class RetrievalSimilarityAssessment {
 	public Map<Case, Double> computeSimilarity() {
 		Map<Case, Double> similarities = new HashMap<Case, Double>();
 		Collection<Attribute<?>> attributes = library.getAttributes().values();
-		for (Attribute<?> attribute : attributes) {	
-			// Compute similarity between the target and each of the library cases for the current
-			// attribute.
-			for (Case libraryCase : cases) {
-				double similarity = target.getSimilarityForAttribute(attribute, libraryCase);
-				double oldSimilarity = similarities.containsKey(libraryCase) ? 
-						similarities.get(libraryCase) : 0;
-				
-				similarities.put(libraryCase, similarity + oldSimilarity);
+		
+		// Compute similarity between the target and each of the library cases for each attribute.
+		// The final similarity is the weighted sum of the similarities for each attribute.
+		for (Case libraryCase : cases) {
+			double similarity = 0.0;
+			for (Attribute<?> attribute : attributes) {	
+				similarity += 
+						attribute.getWeight() * target.getSimilarityForAttribute(
+								attribute, libraryCase);
 			}
+			
+			similarities.put(libraryCase, similarity);
 		}
 		
 		return similarities;
