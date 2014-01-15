@@ -10,7 +10,8 @@ package com.travelling.library;
  */
 public interface Case {
     
-    public Object getAttribute(String name);
-    public void setAttribute(String name, Object value) throws ClassCastException, IllegalArgumentException;
+    public Comparable<?> getAttributeValue(String name);
+    public void setAttributeValue(String name, Comparable<?> value) throws ClassCastException, IllegalArgumentException;
     public boolean save();
+    public double getSimilarityForAttribute(Attribute<?> attribute, Case other);
 }

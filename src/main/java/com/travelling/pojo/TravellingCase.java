@@ -4,6 +4,14 @@
  */
 package com.travelling.pojo;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.travelling.dao.CaseDAO;
 import com.travelling.dao.CaseXCategoryDAO;
 import com.travelling.dao.CategoryDAO;
@@ -12,14 +20,9 @@ import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrCaseXCategory;
 import com.travelling.entity.CbrCategory;
 import com.travelling.entity.CbrDay;
+import com.travelling.library.Attribute;
 import com.travelling.library.Case;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.travelling.retrieval.CaseAttributeMeasures;
 
 /**
  *
@@ -194,7 +197,7 @@ public class TravellingCase implements Case{
     }
 
     @Override
-    public Object getAttribute(String name) {
+    public Comparable<?> getAttributeValue(String name) {
         switch (name.toLowerCase()) {
             case "money":
                 return money;
@@ -227,7 +230,7 @@ public class TravellingCase implements Case{
     }
 
     @Override
-    public void setAttribute(String name, Object value) throws ClassCastException, IllegalArgumentException {
+    public void setAttributeValue(String name, Comparable<?> value) throws ClassCastException, IllegalArgumentException {
         switch (name.toLowerCase()) {
             case "money":
                 if (!(value instanceof Integer))
@@ -267,5 +270,12 @@ public class TravellingCase implements Case{
                 preferences.put(category, (Double)value);
         }
     }
-    
+
+	@Override
+	public double getSimilarityForAttribute(Attribute<?> attribute, Case other) {
+		return CaseAttributeMeasures.getSimilarity(
+				getAttributeValue(attribute.getName()),
+				other.getAttributeValue(attribute.getName()),
+				attribute.getMax(), attribute.getMin());
+	}
 }

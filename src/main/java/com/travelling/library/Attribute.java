@@ -5,11 +5,8 @@
 package com.travelling.library;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,24 +17,27 @@ import java.util.Map;
  * @author Stefan
  */
 public class Attribute<T extends Comparable<T>> implements Serializable {
-    public static final int STOP_CRITERIA = 3;
+
+	private static final long serialVersionUID = -4794973041324837691L;
+
+	public static final int STOP_CRITERIA = 3;
+	
+	private T min;
+	private T max;
+	private double weight;
     
-    private String name;
-    //private Class<T> type; 
+    private String name; 
     private List<Interval> bins = new LinkedList<>();
     
     public Attribute(String name) {
         this.name = name;
-        //Type t = getClass().getGenericSuperclass();
-        //ParameterizedType pt = (ParameterizedType) t;
-        //type = (Class) pt.getActualTypeArguments()[0];
-        
     }
     
-    public List<T> casesToValues(Collection<Case> cases) {
+    @SuppressWarnings("unchecked")
+	public List<T> casesToValues(Collection<Case> cases) {
         List<T> values = new LinkedList<>();
         for (Case c : cases) {
-            T val = (T)c.getAttribute(name);
+            T val = (T)c.getAttributeValue(name);
             if (val != null) values.add(val);
         }
         Collections.sort(values);
@@ -129,8 +129,9 @@ public class Attribute<T extends Comparable<T>> implements Serializable {
         return name;
     }
     
-    public Interval getBin(Case c) {
-        T val = (T)c.getAttribute(name);
+    @SuppressWarnings("unchecked")
+	public Interval getBin(Case c) {
+        T val = (T)c.getAttributeValue(name);
         for (Interval x : bins)
             if (x.inside(val))
                 return x;
@@ -139,6 +140,44 @@ public class Attribute<T extends Comparable<T>> implements Serializable {
     
     public List<Interval> getBins() {
         return bins;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void computeMinAndMaxValues(Collection<Case> cases) {
+    	min = null;
+    	max = null;
+    	for (Case libraryCase : cases) {
+    		T value = (T) libraryCase.getAttributeValue(name);
+    		if (min == null) {
+    			min = value;
+    		} else {
+    			if (min.compareTo(value) > 0) {
+    				min = value;
+    			}
+    		}
+    		
+    		if (max == null) {
+    			max = value;
+    		} else {
+    			if (max.compareTo(value) < 0) {
+    				max = value;
+    			}
+    		}
+		}
+    }
+
+    @SuppressWarnings("unchecked")
+	public Case getMin(Case a, Case b) {
+    	T valueA = (T)(a.getAttributeValue(name));
+    	T valueB = (T)(b.getAttributeValue(name));
+    	return  valueA.compareTo(valueB) < 0 ? a : b; 
+    }
+    
+    @SuppressWarnings("unchecked")
+	public Case getMax(Case a, Case b) {
+    	T valueA = (T)(a.getAttributeValue(name));
+    	T valueB = (T)(b.getAttributeValue(name));
+    	return  valueA.compareTo(valueB) > 0 ? a : b; 
     }
     
     @Override
@@ -151,8 +190,34 @@ public class Attribute<T extends Comparable<T>> implements Serializable {
         return s;
     }
     
-    public class Interval implements Serializable{
-        public T a, b;
+    public T getMin() {
+		return min;
+	}
+
+	public void setMin(T min) {
+		this.min = min;
+	}
+
+	public T getMax() {
+		return max;
+	}
+
+	public void setMax(T max) {
+		this.max = max;
+	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public class Interval implements Serializable{
+		private static final long serialVersionUID = -2872611430222570045L;
+		
+		public T a, b;
         
         public Interval(T a, T b) {
             this.a = a;
@@ -171,7 +236,4 @@ public class Attribute<T extends Comparable<T>> implements Serializable {
             return "[" + a + ", " + b + ")";
         }
     }
-    
-    
-    
 }
