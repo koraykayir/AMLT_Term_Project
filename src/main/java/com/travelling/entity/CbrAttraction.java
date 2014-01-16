@@ -42,6 +42,14 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrAttraction.findByOpeningTime", query = "SELECT c FROM CbrAttraction c WHERE c.openingTime = :openingTime"),
     @NamedQuery(name = "CbrAttraction.findByClosingTime", query = "SELECT c FROM CbrAttraction c WHERE c.closingTime = :closingTime")})
 public class CbrAttraction implements Serializable {
+    @Column(name = "longitude")
+    private Double longitude;
+    @Column(name = "latitude")
+    private Double latitude;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction2", fetch = FetchType.LAZY)
+    private List<CbrAttractionXAttraction> cbrAttractionXAttractionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction1", fetch = FetchType.LAZY)
+    private List<CbrAttractionXAttraction> cbrAttractionXAttractionList1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAttraction", fetch = FetchType.LAZY)
     private List<CbrDayXAttraction> cbrDayXAttractionList;
     @Column(name = "visit_duration")
@@ -169,6 +177,40 @@ public class CbrAttraction implements Serializable {
 
     public void setCbrDayXAttractionList(List<CbrDayXAttraction> cbrDayXAttractionList) {
         this.cbrDayXAttractionList = cbrDayXAttractionList;
+    }
+
+    @XmlTransient
+    public List<CbrAttractionXAttraction> getCbrAttractionXAttractionList() {
+        return cbrAttractionXAttractionList;
+    }
+
+    public void setCbrAttractionXAttractionList(List<CbrAttractionXAttraction> cbrAttractionXAttractionList) {
+        this.cbrAttractionXAttractionList = cbrAttractionXAttractionList;
+    }
+
+    @XmlTransient
+    public List<CbrAttractionXAttraction> getCbrAttractionXAttractionList1() {
+        return cbrAttractionXAttractionList1;
+    }
+
+    public void setCbrAttractionXAttractionList1(List<CbrAttractionXAttraction> cbrAttractionXAttractionList1) {
+        this.cbrAttractionXAttractionList1 = cbrAttractionXAttractionList1;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
     
 }
