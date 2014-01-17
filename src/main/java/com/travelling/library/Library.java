@@ -4,11 +4,6 @@
  */
 package com.travelling.library;
 
-import com.travelling.dao.CaseDAO;
-import com.travelling.dao.CategoryDAO;
-import com.travelling.entity.CbrCase;
-import com.travelling.entity.CbrCategory;
-import com.travelling.pojo.TravellingCase;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,8 +15,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import com.travelling.dao.CaseDAO;
+import com.travelling.dao.CategoryDAO;
+import com.travelling.entity.CbrCase;
+import com.travelling.entity.CbrCategory;
+import com.travelling.pojo.TravellingCase;
+import com.travelling.retrieval.CaseAttributeWeightAssessment;
 
 /**
  *
@@ -50,9 +50,21 @@ public class Library {
         for (CbrCategory cat : CategoryDAO.instance.findLeaves()) {
             attributes.put(cat.getId().toString(), new Attribute<Double>(cat.getId().toString()));
         }
+        
+        // Iterate through all attributes to compute the minimum and the maximum values.
+		for (Attribute<?> attribute : attributes.values()) {
+			attribute.computeMinAndMaxValues(caseMap.values());
+		}
+		
+		// Compute weights for attributes to be used in retrieval.
+		CaseAttributeWeightAssessment weightAssessment = new CaseAttributeWeightAssessment(
+				caseMap.values(), attributes.values());
+		weightAssessment.computeWeights();
     }
 
-    public void constructTree() {
+    
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void constructTree() {
         for (Attribute a : attributes.values()) {
             a.discretize(a.casesToValues(caseMap.values()));
         }
@@ -75,12 +87,13 @@ public class Library {
 
     }
 
-    public static Library load() {
+    @SuppressWarnings("unchecked")
+	public static Library load() {
         Library library = new Library();
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream("attributes.ser"));
             List<Attribute<?>> attributes = (LinkedList<Attribute<?>>) in.readObject();
-            for (Attribute a : attributes) {
+            for (Attribute<?> a : attributes) {
                 library.attributes.put(a.getName(), a);
             }
         } catch (IOException | ClassNotFoundException ex) {
@@ -117,6 +130,10 @@ public class Library {
 
     public TreeNode getTree() {
         return tree;
+    }
+    
+    public Map<String, Attribute<?>> getAttributes() {
+    	return attributes;
     }
     
     public static void main(String[] args) {

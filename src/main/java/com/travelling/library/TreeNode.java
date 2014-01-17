@@ -57,7 +57,15 @@ public class TreeNode implements Serializable{
         }
     }
     
-    public List<Case> getCases() {
+    public Attribute<?> getAttribute() {
+		return attribute;
+	}
+
+	public void setAttribute(Attribute<?> attribute) {
+		this.attribute = attribute;
+	}
+
+	public List<Case> getCases() {
         if (cases != null) return library.getCases(cases);
         List<Case> result = new LinkedList<>();
         for (TreeNode node : children.values()) {
