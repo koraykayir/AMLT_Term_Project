@@ -33,7 +33,7 @@ public class RetrievalIndexing {
 	public List<Case> getPromisingCases() {
 		TreeNode root = library.getTree();
 		
-		while (root.hasNext() && root.getNumberOfCases() > NUMBER_CASES_THRESHOLD) {
+		while (root.hasNext() && root.getNext(target).getNumberOfCases() > NUMBER_CASES_THRESHOLD) {
 			root = root.getNext(target);
 		}
 		

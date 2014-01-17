@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.travelling.library.Attribute;
 import com.travelling.library.Case;
+import com.travelling.utils.Utils;
 
 /**
  * Computes the weights for each attribute using an unsupervised method.
@@ -74,15 +75,11 @@ public class CaseAttributeWeightAssessment {
 		for (Case a : cases) {
 			for (Case b : cases) {
 				double similarity = Math.exp(-alpha * getDistance(attributes, a, b)); 
-				entropy += similarity * log2(similarity) + (1 - similarity) * log2(1 - similarity);
+				entropy += similarity * Utils.log2(similarity) + 
+						(1 - similarity) * Utils.log2(1 - similarity);
 			}
 		}
 		
 		return -entropy;
-	}
-	
-	private static double log2(double x) {
-		return Math.log(x) / Math.log(2);
-	}
-
+	}	
 }

@@ -29,7 +29,8 @@ import com.travelling.retrieval.CaseAttributeMeasures;
  * @author Stefan
  */
 public class TravellingCase implements Case{
-    private Integer id;
+	
+	private Integer id;
     private Date startTime;
     private Date endTime;
     private Integer money;
@@ -270,6 +271,13 @@ public class TravellingCase implements Case{
                 preferences.put(category, (Double)value);
         }
     }
+    
+    @Override
+	public String toString() {
+		return "TravellingCase [id=" + id + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", money=" + money
+				+ ", numberOfDays=" + numberOfDays + "]";
+	}
 
 	@Override
 	public double getSimilarityForAttribute(Attribute<?> attribute, Case other) {
@@ -283,6 +291,7 @@ public class TravellingCase implements Case{
 	public double getDistanceForAttribute(Attribute<?> attribute, Case other) {
 		return CaseAttributeMeasures.getDistance(
 				getAttributeValue(attribute.getName()),
-				other.getAttributeValue(attribute.getName()));
+				other.getAttributeValue(attribute.getName()),
+				attribute.getMax(), attribute.getMin());
 	}
 }

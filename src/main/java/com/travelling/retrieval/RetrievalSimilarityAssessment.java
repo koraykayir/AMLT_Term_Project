@@ -47,15 +47,16 @@ public class RetrievalSimilarityAssessment {
 		
 		// Compute similarity between the target and each of the library cases for each attribute.
 		// The final similarity is the weighted sum of the similarities for each attribute.
-		for (Case libraryCase : cases) {
+		for (Case promisingCase : cases) {
 			double similarity = 0.0;
-			for (Attribute<?> attribute : attributes) {	
-				similarity += 
-						attribute.getWeight() * target.getSimilarityForAttribute(
-								attribute, libraryCase);
+			for (Attribute<?> attribute : attributes) {
+				double local = target.getSimilarityForAttribute(
+						attribute, promisingCase);
+				double weight = attribute.getWeight(); 
+				similarity +=  weight * local;
 			}
 			
-			similarities.put(libraryCase, similarity);
+			similarities.put(promisingCase, similarity);
 		}
 		
 		return similarities;
@@ -86,14 +87,14 @@ public class RetrievalSimilarityAssessment {
 	}
 	
 	/**
-	 * Comparator used to sort the cases by their similarity.
+	 * Comparator used to sort decreasingly the cases by their similarity.
 	 *
 	 */
 	private static class ComparatorBySimilarity implements Comparator<Entry<Case, Double>> {
 
 		@Override
 		public int compare(Entry<Case, Double> arg0, Entry<Case, Double> arg1) {
-			return arg0.getValue().compareTo(arg1.getValue());
+			return arg1.getValue().compareTo(arg0.getValue());
 		}
 	}
 }
