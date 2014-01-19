@@ -42,8 +42,10 @@ import bootstrap.liftmodules.GoogleMaps$;
 import static com.google.gwt.dev.util.editdistance.PatternBitmap.map;
 import com.travelling.dao.CaseDAO;
 import com.travelling.entity.CbrCase;
+import com.travelling.library.Case;
 import com.travelling.library.Library;
 import com.travelling.pojo.TravellingCase;
+import com.travelling.retrieval.RetrievalSimilarityAssessment;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -73,10 +75,11 @@ public class retain_UI extends javax.swing.JFrame {
 
     private List<CbrAttraction> attList;
     private TravellingCase tc;
+    private CbrCase target;
     
     public retain_UI(int i) throws IOException {
         initComponents();
-        Library library = Library.load();
+        
         
         this.setResizable(false);
         this.setLocation(200, 200);
@@ -92,6 +95,7 @@ public class retain_UI extends javax.swing.JFrame {
         attList= new LinkedList<CbrAttraction>();
         setText(i);
         getGoogleAPI();
+        getDistances();
     }
 
     private void getGoogleAPI() throws IOException {
@@ -139,11 +143,9 @@ public class retain_UI extends javax.swing.JFrame {
         
         
         CbrCase cases = CaseDAO.instance.find(i);
+    //    target=(Case)cases;
         
         List<CbrDay> days3 =  cases.getCbrDayList();
-        
-       // CbrDay day = dayxatt.get(i).getFkDay();
-       // CbrDay objectiveDay = day;
 
         CbrDayXAttraction prevdxa = new CbrDayXAttraction();
         boolean check=false;
@@ -166,16 +168,7 @@ public class retain_UI extends javax.swing.JFrame {
             }
         }
         tc = new TravellingCase(cases);
-//        tc.setMoney(cases.getMoney());
-//        tc.setEndTime(cases.getEndTime());
-//        tc.setStartTime(cases.getStartTime());
-//        tc.setNumberOfDays(cases.getDays());
-//        if (jCheckBox1.isEnabled())
-//            tc.setSuccessRatio((double)jSlider1.getValue());
-//        else
-//            tc.setSuccessRatio(null);
-//        
-//        tc.set
+
         txt += "</html>";
         this.jLabel3.setText(txt);
         
@@ -371,6 +364,13 @@ public class retain_UI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSlider jSlider1;
     // End of variables declaration//GEN-END:variables
+
+    private void getDistances() {
+        Library library = Library.load();
+    //    List<Case> cases= CaseDAO.instance.findAll();
+       
+      //  RetrievalSimilarityAssessment rsa = new RetrievalSimilarityAssessment(library, cases, target); //To change body of generated methods, choose Tools | Templates.
+    }
 
 
 }
