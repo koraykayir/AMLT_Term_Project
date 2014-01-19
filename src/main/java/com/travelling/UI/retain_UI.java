@@ -40,6 +40,10 @@ import com.google.gwt.view.client.*;
 import bootstrap.liftmodules.GoogleMaps;
 import bootstrap.liftmodules.GoogleMaps$;
 import static com.google.gwt.dev.util.editdistance.PatternBitmap.map;
+import com.travelling.dao.CaseDAO;
+import com.travelling.entity.CbrCase;
+import com.travelling.library.Library;
+import com.travelling.pojo.TravellingCase;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -68,10 +72,12 @@ import org.eclipse.persistence.sessions.Connector;
 public class retain_UI extends javax.swing.JFrame {
 
     private List<CbrAttraction> attList;
-    private CbrDay objectiveDay;
+    private TravellingCase tc;
     
     public retain_UI(int i) throws IOException {
         initComponents();
+        Library library = Library.load();
+        
         this.setResizable(false);
         this.setLocation(200, 200);
         this.jLabel3.setText("");
@@ -116,7 +122,8 @@ public class retain_UI extends javax.swing.JFrame {
         u= new ImagePanel(map);
         jPanel2.add(u);
         jPanel2.repaint();
-
+        
+        
         
 }   
 
@@ -130,26 +137,45 @@ public class retain_UI extends javax.swing.JFrame {
         List<CbrAttractionXAttraction> attxatt = AttractionXAttractionDAO.instance.findAll();
         String txt = "<html>";
         
-        CbrDay day = dayxatt.get(i).getFkDay();
-        objectiveDay = day;
+        
+        CbrCase cases = CaseDAO.instance.find(i);
+        
+        List<CbrDay> days3 =  cases.getCbrDayList();
+        
+       // CbrDay day = dayxatt.get(i).getFkDay();
+       // CbrDay objectiveDay = day;
 
         CbrDayXAttraction prevdxa = new CbrDayXAttraction();
         boolean check=false;
         
         List<CbrAttractionXAttraction> t = new LinkedList<CbrAttractionXAttraction>();
-        for(CbrDayXAttraction dxa : dayxatt){
-            attList.add(dxa.getFkAttraction());
-            txt = txt + "<br>" + dxa.getFkAttraction().getName() ;
-            if (check){
-                t=       AttractionXAttractionDAO.instance.findDist(dxa.getFkAttraction(),prevdxa.getFkAttraction());
-            
-                txt = txt + "&nbsp;&nbsp;<font color=\"red\"> Travelling Time to Here = " + Integer.toString(t.get(0).getBusTime()) + " mins </font> ";
+        for (int k=0;k<days3.size();k++){
+            txt = txt + "<br><font color=\"red\">Day " + Integer.toString(k+1) + "</font>";
+            dayxatt = DayXAttractionDAO.instance.findByDay(days3.get(k));
+            for(CbrDayXAttraction dxa : dayxatt){
+                attList.add(dxa.getFkAttraction());
+                txt = txt + "<br>" + dxa.getFkAttraction().getName() ;
+                if (check){
+                    t=       AttractionXAttractionDAO.instance.findDist(dxa.getFkAttraction(),prevdxa.getFkAttraction());
+
+                    txt = txt + "&nbsp;&nbsp;<font color=\"green\"> Travelling Time to Here = " + Integer.toString(t.get(0).getBusTime()) + " mins </font> ";
+                }
+                txt = txt + "&nbsp;<font color=\"blue\"> Visit Duration = " + dxa.getFkAttraction().getVisitDuration() + " mins </font> ";
+                check = true;
+                prevdxa = dxa;
             }
-            txt = txt + "&nbsp;<font color=\"blue\"> Visit Duration = " + dxa.getFkAttraction().getVisitDuration() + " mins </font> ";
-            check = true;
-            prevdxa = dxa;
         }
-        
+        tc = new TravellingCase(cases);
+//        tc.setMoney(cases.getMoney());
+//        tc.setEndTime(cases.getEndTime());
+//        tc.setStartTime(cases.getStartTime());
+//        tc.setNumberOfDays(cases.getDays());
+//        if (jCheckBox1.isEnabled())
+//            tc.setSuccessRatio((double)jSlider1.getValue());
+//        else
+//            tc.setSuccessRatio(null);
+//        
+//        tc.set
         txt += "</html>";
         this.jLabel3.setText(txt);
         
@@ -314,10 +340,10 @@ public class retain_UI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(jCheckBox1.isEnabled()){
-            retain rtn = new retain(jSlider1.getValue(),this.objectiveDay);
+            retain rtn = new retain(jSlider1.getValue(),this.tc);
         }
         else{
-            retain rtn = new retain(this.objectiveDay);
+            retain rtn = new retain(this.tc);
         }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

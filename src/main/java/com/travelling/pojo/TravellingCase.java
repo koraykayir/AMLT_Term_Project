@@ -30,11 +30,12 @@ import com.travelling.retrieval.CaseAttributeMeasures;
  */
 public class TravellingCase implements Case{
 	
-	private Integer id;
+    private Integer id;
     private Date startTime;
     private Date endTime;
     private Integer money;
     private Integer numberOfDays;
+    private Double successRatio;
     private Map<CbrCategory, Double> preferences = new HashMap<>();
     private List<Day> days = new LinkedList<>();
     
@@ -43,6 +44,7 @@ public class TravellingCase implements Case{
     }
     
     public TravellingCase(CbrCase c) {
+        successRatio = c.getSuccessRatio();
         id = c.getId();
         startTime = c.getStartTime();
         endTime = c.getEndTime();
@@ -152,6 +154,7 @@ public class TravellingCase implements Case{
         c.setEndTime(endTime);
         c.setMoney(money);
         c.setDays(getNumberOfDays());
+        c.setSuccessRatio(successRatio);
         c.setCbrCaseXCategoryList(new LinkedList<CbrCaseXCategory>());
         
         
@@ -294,4 +297,18 @@ public class TravellingCase implements Case{
 				other.getAttributeValue(attribute.getName()),
 				attribute.getMax(), attribute.getMin());
 	}
+
+    /**
+     * @return the successRatio
+     */
+    public Double getSuccessRatio() {
+        return successRatio;
+    }
+
+    /**
+     * @param successRatio the successRatio to set
+     */
+    public void setSuccessRatio(Double successRatio) {
+        this.successRatio = successRatio;
+    }
 }

@@ -6,7 +6,12 @@
 
 package com.travelling.retain;
 
+import com.travelling.dao.CaseDAO;
+import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrDay;
+import com.travelling.pojo.TravellingCase;
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -14,12 +19,31 @@ import com.travelling.entity.CbrDay;
  */
 public class retain {
 
-    public retain(int value, CbrDay objectiveDay) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public retain(int value, TravellingCase tc) {
+        
+        double poss = (Math.abs(value - 50))/62.5;
+        
+        Random rand = new Random();
+        
+        double n = rand.nextDouble();
+        TravellingCase tc1 = tc;
+       
+        List<CbrCase> caseList = CaseDAO.instance.findAll();
+        
+        tc1.setId(null);
+        
+        tc1.setSuccessRatio((double)value);
+        if(poss>=n){
+            tc1.save();
+        }
+        
     }
 
-    public retain(CbrDay objectiveDay) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public retain(TravellingCase tc) {
+        TravellingCase tc1 = tc;
+        tc1.setSuccessRatio(null);
+        tc1.setId(null);
+        tc1.save();
     }
     
 }

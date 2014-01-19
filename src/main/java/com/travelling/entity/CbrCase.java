@@ -39,14 +39,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrCase.findByEndTime", query = "SELECT c FROM CbrCase c WHERE c.endTime = :endTime"),
     @NamedQuery(name = "CbrCase.findByMoney", query = "SELECT c FROM CbrCase c WHERE c.money = :money")})
 public class CbrCase implements Serializable {
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "success_ratio")
+    private Double successRatio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "days")
     private int days;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
     private List<CbrDay> cbrDayList;
-    @Column(name = "successful")
-    private Boolean successful;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCase", fetch = FetchType.LAZY)
     private List<CbrCaseXCategory> cbrCaseXCategoryList;
     private static final long serialVersionUID = 1L;
@@ -128,14 +129,6 @@ public class CbrCase implements Serializable {
         return "com.travelling.entity.CbrCase[ id=" + id + " ]";
     }
 
-    public Boolean getSuccessful() {
-        return successful;
-    }
-
-    public void setSuccessful(Boolean successful) {
-        this.successful = successful;
-    }
-
     @XmlTransient
     public List<CbrCaseXCategory> getCbrCaseXCategoryList() {
         return cbrCaseXCategoryList;
@@ -160,6 +153,14 @@ public class CbrCase implements Serializable {
 
     public void setDays(int days) {
         this.days = days;
+    }
+
+    public Double getSuccessRatio() {
+        return successRatio;
+    }
+
+    public void setSuccessRatio(Double successRatio) {
+        this.successRatio = successRatio;
     }
     
 }

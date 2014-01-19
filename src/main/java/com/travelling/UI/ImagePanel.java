@@ -27,8 +27,6 @@ public class ImagePanel extends JPanel {
     public ImagePanel() {
     }
     
-        
-    
     @Override
     protected void paintComponent(Graphics g) {
         setSize(getParent().getSize());

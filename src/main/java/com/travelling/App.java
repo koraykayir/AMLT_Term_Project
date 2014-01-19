@@ -33,7 +33,7 @@ public class App
         
 
         retain_UI a;
-        a = new retain_UI(5);
+        a = new retain_UI(49);
         CbrCase c = CaseDAO.instance.find(1);
         System.out.println(c);
     }
