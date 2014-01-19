@@ -15,4 +15,6 @@ public interface Case {
     public boolean save();
     public double getDistanceForAttribute(Attribute<?> attribute, Case other);
     public double getSimilarityForAttribute(Attribute<?> attribute, Case other);
+    public Integer getId();        
+    
 }

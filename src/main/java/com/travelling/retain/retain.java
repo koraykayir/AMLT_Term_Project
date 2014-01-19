@@ -10,6 +10,7 @@ import com.travelling.dao.CaseDAO;
 import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrDay;
 import com.travelling.library.Case;
+import com.travelling.library.TreeNode;
 import com.travelling.pojo.TravellingCase;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Random;
  */
 public class retain {
 
-    public retain(int value, TravellingCase tc, Map<Case, Double> similarities) {
+    public retain(int value, TravellingCase tc, Map<Case, Double> similarities, TreeNode node) {
         double poss = (Math.abs(value - 50))/62.5;
         
         Random rand = new Random();
@@ -45,11 +46,12 @@ public class retain {
             tc1.setSuccessRatio((double)value);
             if(poss>=n){
                 tc1.save();
+                node.add(tc1);
             }
         }
     }
 
-    public retain(TravellingCase tc, Map<Case, Double> similarities) {
+    public retain(TravellingCase tc, Map<Case, Double> similarities,TreeNode node) {
         TravellingCase tc1 = tc;
         Collection<Double> u = similarities.values();
         boolean check =true;
@@ -59,12 +61,12 @@ public class retain {
         }
         
         tc1.setId(null);
-        if(check){
+   //     if(check){
             tc1.setSuccessRatio(null);
             
             tc1.save();
-            
-        }
+            node.add(tc1);
+     //   }
     }
    
 }

@@ -58,6 +58,11 @@ public class TreeNode implements Serializable{
         }
     }
     
+  
+    public void add(Case cs){
+        cases.add(cs.getId());
+    }
+    
     public Attribute<?> getAttribute() {
 		return attribute;
 	}

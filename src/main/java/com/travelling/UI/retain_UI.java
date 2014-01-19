@@ -41,6 +41,7 @@ public class retain_UI extends javax.swing.JFrame {
     private TravellingCase tc;
     private TravellingCase target;
     private List<Case> clist;
+    TreeNode a;
     Map<Case, Double> similarities = new HashMap<Case, Double>();
     
     public retain_UI(int i) throws IOException {
@@ -299,11 +300,11 @@ public class retain_UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(jCheckBox1.isEnabled()){
-            retain rtn = new retain(jSlider1.getValue(),this.tc,similarities);
+        if(jCheckBox1.isSelected()){
+            retain rtn = new retain(jSlider1.getValue(),this.tc,similarities,a);
         }
         else{
-            retain rtn = new retain(this.tc,similarities);
+            retain rtn = new retain(this.tc,similarities,a);
         }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -333,12 +334,12 @@ public class retain_UI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void getDistances() {
-        //ibrary library = Library.load();
-        Library library = new Library();
-        library.constructAttributes();
-        library.constructTree();
-        library.save();
-        TreeNode a =  library.getTree();
+        Library library = Library.load();
+//        Library library = new Library();
+//        library.constructAttributes();
+//        library.constructTree();
+//        library.save();
+        a =  library.getTree();
          while(a.hasNext()){
             a=a.getNext(tc);
         }
