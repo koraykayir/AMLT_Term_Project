@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.travelling.security.getSecure;
 import java.io.IOException;
+import com.travelling.UI.retain_UI;
 /**
  * Hello world!
  *
@@ -29,7 +30,10 @@ public class App
         //        int a;
         //        a=x.secure(1);      // DO NOT RUN THESE LINES UNLESS YOU CHANGE THE ATTRACTIONS
         /////////////////////////////////////////////////////////////////////////////////////////
-   
+        
+
+        retain_UI a;
+        a = new retain_UI(2);
         CbrCase c = CaseDAO.instance.find(1);
         System.out.println(c);
     }

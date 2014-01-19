@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CbrAttractionXAttraction.findAll", query = "SELECT c FROM CbrAttractionXAttraction c"),
     @NamedQuery(name = "CbrAttractionXAttraction.findById", query = "SELECT c FROM CbrAttractionXAttraction c WHERE c.id = :id"),
     @NamedQuery(name = "CbrAttractionXAttraction.findByBusTime", query = "SELECT c FROM CbrAttractionXAttraction c WHERE c.busTime = :busTime")})
+//   @NamedQuery(name = "CbrAttractionXAttraction.CbrGetSpecificAtt", query = "SELECT * FROM cbr_attraction_x_Attraction WHERE fk_attraction1 = :id1 AND fk_attraction2 = :id2")
 public class CbrAttractionXAttraction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,6 +62,12 @@ public class CbrAttractionXAttraction implements Serializable {
     public CbrAttractionXAttraction(Integer id, int busTime) {
         this.id = id;
         this.busTime = busTime;
+    }
+    
+    
+    public CbrAttractionXAttraction(CbrAttraction fk1, CbrAttraction fk2) {
+        this.fkAttraction1 = fk1;
+        this.fkAttraction2 = fk2;
     }
 
     public Integer getId() {

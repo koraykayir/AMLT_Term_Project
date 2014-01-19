@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 
-    private Class<T> type;
+    Class<T> type;
     protected EntityManagerFactory entityManagerFactory;
 
     public AbstractDAOImpl() {
@@ -351,6 +351,7 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
         }
         
     }
+
 
     @Override
     public List<T> findByNamedQuery(String qry, HashMap<String, Object> params) {
