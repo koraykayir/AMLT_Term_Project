@@ -7,66 +7,29 @@
 package com.travelling.UI;
 
 import com.travelling.retain.retain;
-
-import java.awt.Point;
+import java.util.HashMap;
 import com.travelling.dao.DayDAO;
 import com.travelling.dao.DayXAttractionDAO;
-import com.travelling.dao.AttractionDAO;
-import java.util.List;
 import java.io.IOException;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import com.google.api.gwt.oauth2.client.*;
-import com.google.api.gwt.oauth2.script.client.ScriptEntryPoint;
-import com.travelling.App;
 import com.travelling.dao.AttractionDAO;
 import com.travelling.dao.AttractionXAttractionDAO;
 import com.travelling.entity.CbrAttraction;
 import com.travelling.entity.CbrAttractionXAttraction;
 import com.travelling.entity.CbrDay;
 import com.travelling.entity.CbrDayXAttraction;
-import com.travelling.mapQuery.location;
-import com.travelling.mapQuery.mapSearch;
-import java.util.AbstractList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.google.api.gwt.oauth2.client.*;
-import com.google.api.gwt.oauth2.script.client.ScriptEntryPoint;
-import com.google.gwt.view.client.*;
-import bootstrap.liftmodules.GoogleMaps;
-import bootstrap.liftmodules.GoogleMaps$;
-import static com.google.gwt.dev.util.editdistance.PatternBitmap.map;
 import com.travelling.dao.CaseDAO;
 import com.travelling.entity.CbrCase;
 import com.travelling.library.Case;
 import com.travelling.library.Library;
 import com.travelling.pojo.TravellingCase;
 import com.travelling.retrieval.RetrievalSimilarityAssessment;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import net.liftmodules.googlemaps.snippet.*;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import net.liftweb.json.NoTypeHints;
-import org.apache.http.HttpConnection;
-import org.eclipse.persistence.sessions.Connector;
+import java.util.Map;
 /**
  *
  * @author Koray
@@ -75,7 +38,9 @@ public class retain_UI extends javax.swing.JFrame {
 
     private List<CbrAttraction> attList;
     private TravellingCase tc;
-    private CbrCase target;
+    private TravellingCase target;
+    private List<Case> clist;
+    Map<Case, Double> similarities = new HashMap<Case, Double>();
     
     public retain_UI(int i) throws IOException {
         initComponents();
@@ -143,7 +108,8 @@ public class retain_UI extends javax.swing.JFrame {
         
         
         CbrCase cases = CaseDAO.instance.find(i);
-    //    target=(Case)cases;
+        
+       target= new TravellingCase(cases);
         
         List<CbrDay> days3 =  cases.getCbrDayList();
 
@@ -333,10 +299,10 @@ public class retain_UI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(jCheckBox1.isEnabled()){
-            retain rtn = new retain(jSlider1.getValue(),this.tc);
+            retain rtn = new retain(jSlider1.getValue(),this.tc,similarities);
         }
         else{
-            retain rtn = new retain(this.tc);
+            retain rtn = new retain(this.tc,similarities);
         }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -367,9 +333,16 @@ public class retain_UI extends javax.swing.JFrame {
 
     private void getDistances() {
         Library library = Library.load();
+        clist=library.getTree().getCases();
+      //  target.
+       // TravellingCase tc2 = new TravellingCase(case);
     //    List<Case> cases= CaseDAO.instance.findAll();
        
-      //  RetrievalSimilarityAssessment rsa = new RetrievalSimilarityAssessment(library, cases, target); //To change body of generated methods, choose Tools | Templates.
+        RetrievalSimilarityAssessment rsa = new RetrievalSimilarityAssessment(library, clist, target);
+        TravellingCase a = new TravellingCase();
+        double b;//To change body of generated methods, choose Tools | Templates.
+        
+        similarities =rsa.computeSimilarity();
     }
 
 

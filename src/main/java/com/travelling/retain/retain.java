@@ -9,8 +9,11 @@ package com.travelling.retain;
 import com.travelling.dao.CaseDAO;
 import com.travelling.entity.CbrCase;
 import com.travelling.entity.CbrDay;
+import com.travelling.library.Case;
 import com.travelling.pojo.TravellingCase;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -19,8 +22,7 @@ import java.util.Random;
  */
 public class retain {
 
-    public retain(int value, TravellingCase tc) {
-        
+    public retain(int value, TravellingCase tc, Map<Case, Double> similarities) {
         double poss = (Math.abs(value - 50))/62.5;
         
         Random rand = new Random();
@@ -29,21 +31,38 @@ public class retain {
         TravellingCase tc1 = tc;
        
         List<CbrCase> caseList = CaseDAO.instance.findAll();
-        
-        tc1.setId(null);
-        
-        tc1.setSuccessRatio((double)value);
-        if(poss>=n){
-            tc1.save();
+        Collection<Double> u = similarities.values();
+        boolean check =true;
+        for(Double a : u){
+             if(a>15)
+                 check=false;
         }
         
+        tc1.setId(null);
+        if(check){
+            tc1.setSuccessRatio((double)value);
+            if(poss>=n){
+                tc1.save();
+            }
+        }
     }
 
-    public retain(TravellingCase tc) {
+    public retain(TravellingCase tc, Map<Case, Double> similarities) {
         TravellingCase tc1 = tc;
-        tc1.setSuccessRatio(null);
+        Collection<Double> u = similarities.values();
+        boolean check =true;
+        for(Double a : u){
+             if(a>15)
+                 check=false;
+        }
+        
         tc1.setId(null);
-        tc1.save();
+        if(check){
+            tc1.setSuccessRatio(null);
+            
+            tc1.save();
+            
+        }
     }
-    
+   
 }

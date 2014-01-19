@@ -17,7 +17,7 @@ import com.travelling.library.Library;
 /**
  * Assess the exact similarity score for each of the "promising" cases returned by the indexing.
  * Returns the first k most similar cases to the target case. In order to do that, uses
- * k-nearest neighbour algorithm.
+ * k-nearest neighbor algorithm.
  * 
  * @author Claudia Cardei
  *
