@@ -28,6 +28,7 @@ public class TreeNode implements Serializable{
         numberOfCases = cases.size();
         if (cases.size() <= Library.NEIGHBOURHOOD_SIZE) {
             this.cases = cases;
+            children=null;
             return;
         }
         double max = -1.;

@@ -23,6 +23,7 @@ import com.travelling.dao.CaseDAO;
 import com.travelling.entity.CbrCase;
 import com.travelling.library.Case;
 import com.travelling.library.Library;
+import com.travelling.library.TreeNode;
 import com.travelling.pojo.TravellingCase;
 import com.travelling.retrieval.RetrievalSimilarityAssessment;
 import java.awt.Image;
@@ -332,15 +333,18 @@ public class retain_UI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void getDistances() {
-        Library library = Library.load();
+        //ibrary library = Library.load();
+        Library library = new Library();
+        library.constructAttributes();
+        library.constructTree();
+        library.save();
+        TreeNode a =  library.getTree();
+         while(a.hasNext()){
+            a=a.getNext(tc);
+        }
         clist=library.getTree().getCases();
-      //  target.
-       // TravellingCase tc2 = new TravellingCase(case);
-    //    List<Case> cases= CaseDAO.instance.findAll();
-       
+        clist=a.getCases();
         RetrievalSimilarityAssessment rsa = new RetrievalSimilarityAssessment(library, clist, target);
-        TravellingCase a = new TravellingCase();
-        double b;//To change body of generated methods, choose Tools | Templates.
         
         similarities =rsa.computeSimilarity();
     }

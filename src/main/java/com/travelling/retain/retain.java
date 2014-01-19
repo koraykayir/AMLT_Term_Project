@@ -29,6 +29,8 @@ public class retain {
         
         double n = rand.nextDouble();
         TravellingCase tc1 = tc;
+        
+        
        
         List<CbrCase> caseList = CaseDAO.instance.findAll();
         Collection<Double> u = similarities.values();

@@ -148,6 +148,8 @@ public class Attribute<T extends Comparable<T>> implements Serializable {
     	max = null;
     	for (Case libraryCase : cases) {
     		T value = (T) libraryCase.getAttributeValue(name);
+                if (value == null)
+                   value = null;
     		if (min == null) {
     			min = value;
     		} else {
