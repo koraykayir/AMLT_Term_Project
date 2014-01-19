@@ -9,7 +9,6 @@
     <class>com.travelling.entity.CbrAttraction</class>
     <class>com.travelling.entity.CbrCaseXCategory</class>
     <class>com.travelling.entity.CbrDay</class>
-    <class>com.travelling.entity.CbrDayAttraction</class>
     <class>com.travelling.entity.CbrDayXAttraction</class>
     <class>com.travelling.entity.CbrAttractionXAttraction</class>
     <properties>
