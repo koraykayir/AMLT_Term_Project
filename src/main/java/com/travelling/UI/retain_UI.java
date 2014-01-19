@@ -6,6 +6,8 @@
 
 package com.travelling.UI;
 
+import com.travelling.retain.retain;
+
 import java.awt.Point;
 import com.travelling.dao.DayDAO;
 import com.travelling.dao.DayXAttractionDAO;
@@ -37,7 +39,28 @@ import com.google.api.gwt.oauth2.script.client.ScriptEntryPoint;
 import com.google.gwt.view.client.*;
 import bootstrap.liftmodules.GoogleMaps;
 import bootstrap.liftmodules.GoogleMaps$;
+import static com.google.gwt.dev.util.editdistance.PatternBitmap.map;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import net.liftmodules.googlemaps.snippet.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import net.liftweb.json.NoTypeHints;
+import org.apache.http.HttpConnection;
+import org.eclipse.persistence.sessions.Connector;
 /**
  *
  * @author Koray
@@ -45,13 +68,17 @@ import net.liftmodules.googlemaps.snippet.*;
 public class retain_UI extends javax.swing.JFrame {
 
     private List<CbrAttraction> attList;
+    private CbrDay objectiveDay;
     
-    public retain_UI(int i) {
+    public retain_UI(int i) throws IOException {
         initComponents();
         this.setResizable(false);
         this.setLocation(200, 200);
+        this.jLabel3.setText("");
         this.jLabel4.setText((Integer.toString(jSlider1.getValue()))+"%");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); 
         this.setVisible(true);
         this.jSlider1.setVisible(false);
         this.jLabel1.setVisible(false);
@@ -61,41 +88,56 @@ public class retain_UI extends javax.swing.JFrame {
         getGoogleAPI();
     }
 
-    private void getGoogleAPI() {
-        String googleQuery = "http://maps.googleapis.com/maps/api/directions/xml?origin=";
+    private void getGoogleAPI() throws IOException {
+        String googleQuery = "http://maps.googleapis.com/maps/api/staticmap?size=500x300&sensor=false&path=color:0xff0000ff|weight:5|";
         for (int i=0;i<attList.size();i++)
         {
-            if(i==0)
-                googleQuery += Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude())+"&waypoints=";
-            else if(i==attList.size()-1)
-                googleQuery += "&destination=" + Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude());
-            else if (i==attList.size()-2)
+            if (i==attList.size()-1)
                 googleQuery += Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude());
             else
                 googleQuery += Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude()) + "|";
       
         }
-//        GoogleMaps.init();
-        googleQuery += "&sensor=false";
-  //      google.maps.DirectionRenderer();
-    }
+        for (int i=0;i<attList.size();i++)
+        {
+            if (i==attList.size()-1)
+                googleQuery += "&markers=color:blue%7Clabel:"+Integer.toString(i+1)+"%7C" + Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude());
+            else
+                googleQuery += "&markers=color:blue%7Clabel:"+Integer.toString(i+1)+"%7C" + Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude()) ;
+      
+        }
+
+        Image map = null;
+        URL mapURL= new URL(googleQuery);
+        map = ImageIO.read(mapURL);
+
+        setVisible(true); 
+        ImagePanel u;
+        u= new ImagePanel(map);
+        jPanel2.add(u);
+        jPanel2.repaint();
+
+        
+}   
+
+
     private void setText(int i){
         
         List<CbrDay> days = DayDAO.instance.findAll();
+        CbrDay days2 = DayDAO.instance.find(i);
         List<CbrAttraction> atts = AttractionDAO.instance.findAll();
-        List<CbrDayXAttraction> dayxatt = DayXAttractionDAO.instance.findAll();
+        List<CbrDayXAttraction> dayxatt = DayXAttractionDAO.instance.findByDay(days2);
         List<CbrAttractionXAttraction> attxatt = AttractionXAttractionDAO.instance.findAll();
         String txt = "<html>";
-
+        
         CbrDay day = dayxatt.get(i).getFkDay();
-        
-        List<CbrDayXAttraction> dayxatts = day.getCbrDayXAttractionList();
-        
+        objectiveDay = day;
+
         CbrDayXAttraction prevdxa = new CbrDayXAttraction();
         boolean check=false;
         
         List<CbrAttractionXAttraction> t = new LinkedList<CbrAttractionXAttraction>();
-        for(CbrDayXAttraction dxa : dayxatts){
+        for(CbrDayXAttraction dxa : dayxatt){
             attList.add(dxa.getFkAttraction());
             txt = txt + "<br>" + dxa.getFkAttraction().getName() ;
             if (check){
@@ -120,16 +162,14 @@ public class retain_UI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jCheckBox1 = new javax.swing.JCheckBox();
         jSlider1 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -180,32 +220,20 @@ public class retain_UI extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        jLabel2.setText("Some results here");
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bounds.bounds.bounds2D.centerX}"), jLabel2, org.jdesktop.beansbinding.BeanProperty.create("horizontalAlignment"));
-        bindingGroup.addBinding(binding);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
         jLabel4.setText("jLabel4");
 
         jLabel3.setText("jLabel3");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -215,34 +243,31 @@ public class retain_UI extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addGap(295, 295, 295))
-                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel4))
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(102, 102, 102))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(42, 42, 42))))
+                                    .addComponent(jLabel3)
+                                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 48, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(38, 38, 38)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
                 .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -254,8 +279,6 @@ public class retain_UI extends javax.swing.JFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -290,6 +313,12 @@ public class retain_UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(jCheckBox1.isEnabled()){
+            retain rtn = new retain(jSlider1.getValue(),this.objectiveDay);
+        }
+        else{
+            retain rtn = new retain(this.objectiveDay);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -311,13 +340,12 @@ public class retain_UI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSlider jSlider1;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
 
 }
+
