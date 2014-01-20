@@ -117,8 +117,8 @@ public class RetainUI extends javax.swing.JFrame {
             boolean check = false;
             for (CbrAttraction attraction : day.getAttractions()) {
                 txt = txt + "<br>" + attraction.getName();
+                attList.add(attraction);
                 if (check) {
-                    attList.add(attraction);
                     t = AttractionXAttractionDAO.instance.findDist(attraction, prevAttraction);
 
                     txt = txt + "&nbsp;&nbsp;<font color=\"green\"> Travelling Time to Here = " + (t.get(0).getBusTime()) + " mins </font> ";
@@ -252,11 +252,11 @@ public class RetainUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(23, 23, 23)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
                 .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

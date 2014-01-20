@@ -155,7 +155,7 @@
     <Component class="javax.swing.JFormattedTextField" name="startTime">
       <Properties>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-          <Format format="h:mm" subtype="-1" type="2"/>
+          <Format format="HH:dd" subtype="-1" type="2"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="4"/>
       </Properties>
@@ -166,7 +166,7 @@
     <Component class="javax.swing.JFormattedTextField" name="endTime">
       <Properties>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-          <Format format="h:mm" subtype="-1" type="2"/>
+          <Format format="HH:mm" subtype="-1" type="2"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="4"/>
       </Properties>
