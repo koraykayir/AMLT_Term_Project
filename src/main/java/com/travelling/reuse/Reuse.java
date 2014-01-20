@@ -131,7 +131,7 @@ public class Reuse implements Constants {
     
     public boolean solutionValid(ScoredCase sCase) {
         List<Day> days = sCase.getDays();
-        List<CbrAttraction> attractions;
+        List<CbrAttraction> attractions, attr2;
         int i, j, time, startTime, stopTime, lastStopTime, attrStartTime, attrStopTime;
         GregorianCalendar caseStart, dayStart, caseStop, aux;
         CbrAttraction attraction;
@@ -214,6 +214,21 @@ public class Reuse implements Constants {
         
         if ( time > lastStopTime ) {
             return false;
+        }
+        
+        // Check if the same attraction appears several time
+        for (i = 0; i < days.size(); i++) {
+            attractions = days.get(i).getAttractions();
+            for (j = 0; j < attractions.size(); j++) {
+                for (int k = 0; k < days.size(); k++) {
+                    attr2 = days.get(k).getAttractions();
+                    for (int p = 0; p < attr2.size(); p++) {
+                        if ( !(i == k && j == p) && attractions.get(j).equals(attr2.get(p)) ) {
+                            return false;
+                        }
+                    }
+                }
+            }
         }
         
         return true;
@@ -595,13 +610,13 @@ public class Reuse implements Constants {
             
             sort();            
             selection();
-            //System.out.print(generation + ": " + population.size() + " " + population.get(0).getFitness() + " ");
+            System.out.print(generation + ": " + population.size() + " " + population.get(0).getFitness() + " ");
             
             int f = 0;
             for (int i = 0; i < population.size(); i++) {
                 f+= population.get(i).getFitness();
             }
-            //System.out.println((double)f/population.size());
+            System.out.println((double)f/population.size());
             
             generation++;
         }
