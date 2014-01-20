@@ -82,6 +82,11 @@ public class InputUI extends javax.swing.JFrame {
         scrollPanel = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Please specify how much money do you have in order to spend for this holiday?");
 
@@ -229,6 +234,10 @@ public class InputUI extends javax.swing.JFrame {
     private void endTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endTimeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_endTimeActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        library.save();
+    }//GEN-LAST:event_formWindowClosing
   
                            
     
