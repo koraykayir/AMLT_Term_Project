@@ -7,13 +7,6 @@
 package com.travelling.security;
 
 import java.io.IOException;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import com.google.api.gwt.oauth2.client.*;
-import com.google.api.gwt.oauth2.script.client.ScriptEntryPoint;
-import com.travelling.App;
 import com.travelling.dao.AttractionDAO;
 import com.travelling.dao.AttractionXAttractionDAO;
 import com.travelling.entity.CbrAttraction;
@@ -21,9 +14,6 @@ import com.travelling.entity.CbrAttractionXAttraction;
 import com.travelling.mapQuery.location;
 import com.travelling.mapQuery.mapSearch;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.mortbay.jetty.security.Credential;
 
 
 

@@ -360,7 +360,6 @@ public class Reuse implements Constants {
                 + Math.abs(targetCase.getNumberOfDays() - days.size())
                 - WEIGHT_CATEGORY * categoryScore
                 + WEIGHT_NEGATIVE * maxSim;
-        
         sCase.setFitness(fitness);
     }
     
@@ -618,6 +617,15 @@ public class Reuse implements Constants {
             }
             System.out.println((double)f/population.size());
             
+            // Restart
+            if ( generation == 500 && population.get(0).getFitness() > INVALID_PENALTY ) {
+                int n = population.size();
+                while ( population.size() >  0.05 * n ) {
+                    population.remove(n);
+                }
+                generation = 0;
+            }
+             
             generation++;
         }
         

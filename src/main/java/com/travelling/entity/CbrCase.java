@@ -40,8 +40,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CbrCase.findByMoney", query = "SELECT c FROM CbrCase c WHERE c.money = :money")})
 public class CbrCase implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "success_ratio")
-    private Double successRatio;
+    private double successRatio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "days")
@@ -155,11 +157,11 @@ public class CbrCase implements Serializable {
         this.days = days;
     }
 
-    public Double getSuccessRatio() {
+    public double getSuccessRatio() {
         return successRatio;
     }
 
-    public void setSuccessRatio(Double successRatio) {
+    public void setSuccessRatio(double successRatio) {
         this.successRatio = successRatio;
     }
     

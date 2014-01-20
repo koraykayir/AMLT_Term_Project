@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.travelling.UI;
 
 import com.travelling.retain.retain;
@@ -24,6 +23,7 @@ import com.travelling.entity.CbrCase;
 import com.travelling.library.Case;
 import com.travelling.library.Library;
 import com.travelling.library.TreeNode;
+import com.travelling.pojo.Day;
 import com.travelling.pojo.TravellingCase;
 import com.travelling.retrieval.RetrievalSimilarityAssessment;
 import java.awt.Image;
@@ -31,116 +31,108 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.util.Map;
+
 /**
  *
  * @author Koray
  */
-public class retain_UI extends javax.swing.JFrame {
+public class RetainUI extends javax.swing.JFrame {
 
     private List<CbrAttraction> attList;
-    private TravellingCase tc;
     private TravellingCase target;
     private List<Case> clist;
+    private Library library;
     TreeNode a;
     Map<Case, Double> similarities = new HashMap<Case, Double>();
-    
-    public retain_UI(int i) throws IOException {
+
+    public RetainUI(Library library, TravellingCase tc) throws IOException {
         initComponents();
-        
-        
+
+        this.library = library;
         this.setResizable(false);
         this.setLocation(200, 200);
         this.jLabel3.setText("");
-        this.jLabel4.setText((Integer.toString(jSlider1.getValue()))+"%");
+        this.jLabel4.setText((Integer.toString(jSlider1.getValue())) + "%");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null); 
+        setLocationRelativeTo(null);
         this.setVisible(true);
         this.jSlider1.setVisible(false);
         this.jLabel1.setVisible(false);
         this.jLabel4.setVisible(false);
-        attList= new LinkedList<CbrAttraction>();
-        setText(i);
+        attList = new LinkedList<CbrAttraction>();
+        setText(tc);
         getGoogleAPI();
         getDistances();
     }
 
     private void getGoogleAPI() throws IOException {
         String googleQuery = "http://maps.googleapis.com/maps/api/staticmap?size=500x300&sensor=false&path=color:0xff0000ff|weight:5|";
-        for (int i=0;i<attList.size();i++)
-        {
-            if (i==attList.size()-1)
-                googleQuery += Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude());
-            else
-                googleQuery += Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude()) + "|";
-      
+        for (int i = 0; i < attList.size(); i++) {
+            if (i == attList.size() - 1) {
+                googleQuery += Double.toString(attList.get(i).getLongitude()) + "," + Double.toString(attList.get(i).getLatitude());
+            } else {
+                googleQuery += Double.toString(attList.get(i).getLongitude()) + "," + Double.toString(attList.get(i).getLatitude()) + "|";
+            }
+
         }
-        for (int i=0;i<attList.size();i++)
-        {
-            if (i==attList.size()-1)
-                googleQuery += "&markers=color:blue%7Clabel:"+Integer.toString(i+1)+"%7C" + Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude());
-            else
-                googleQuery += "&markers=color:blue%7Clabel:"+Integer.toString(i+1)+"%7C" + Double.toString(attList.get(i).getLongitude()) +"," +Double.toString(attList.get(i).getLatitude()) ;
-      
+        for (int i = 0; i < attList.size(); i++) {
+            if (i == attList.size() - 1) {
+                googleQuery += "&markers=color:blue%7Clabel:" + Integer.toString(i + 1) + "%7C" + Double.toString(attList.get(i).getLongitude()) + "," + Double.toString(attList.get(i).getLatitude());
+            } else {
+                googleQuery += "&markers=color:blue%7Clabel:" + Integer.toString(i + 1) + "%7C" + Double.toString(attList.get(i).getLongitude()) + "," + Double.toString(attList.get(i).getLatitude());
+            }
+
         }
 
         Image map = null;
-        URL mapURL= new URL(googleQuery);
+        URL mapURL = new URL(googleQuery);
         map = ImageIO.read(mapURL);
 
-        setVisible(true); 
+        setVisible(true);
         ImagePanel u;
-        u= new ImagePanel(map);
+        u = new ImagePanel(map);
         jPanel2.add(u);
         jPanel2.repaint();
-        
-        
-        
-}   
 
 
-    private void setText(int i){
-        
-        List<CbrDay> days = DayDAO.instance.findAll();
-        CbrDay days2 = DayDAO.instance.find(i);
-        List<CbrAttraction> atts = AttractionDAO.instance.findAll();
-        List<CbrDayXAttraction> dayxatt = DayXAttractionDAO.instance.findByDay(days2);
-        List<CbrAttractionXAttraction> attxatt = AttractionXAttractionDAO.instance.findAll();
+
+    }
+
+    private void setText(TravellingCase target) {
+
         String txt = "<html>";
-        
-        
-        CbrCase cases = CaseDAO.instance.find(i);
-        
-       target= new TravellingCase(cases);
-        
-        List<CbrDay> days3 =  cases.getCbrDayList();
 
-        CbrDayXAttraction prevdxa = new CbrDayXAttraction();
-        boolean check=false;
-        
+
+
+        List<Day> days = target.getDays();
+
+        CbrAttraction prevAttraction = null;
+        boolean check = false;
+
         List<CbrAttractionXAttraction> t = new LinkedList<CbrAttractionXAttraction>();
-        for (int k=0;k<days3.size();k++){
-            txt = txt + "<br><font color=\"red\">Day " + Integer.toString(k+1) + "</font>";
-            dayxatt = DayXAttractionDAO.instance.findByDay(days3.get(k));
-            for(CbrDayXAttraction dxa : dayxatt){
-                attList.add(dxa.getFkAttraction());
-                txt = txt + "<br>" + dxa.getFkAttraction().getName() ;
-                if (check){
-                    t=       AttractionXAttractionDAO.instance.findDist(dxa.getFkAttraction(),prevdxa.getFkAttraction());
+        for (int k = 0; k < days.size(); k++) {
+            Day day = days.get(k);
+            txt = txt + "<br><font color=\"red\">Day " + (k + 1) + "</font>";
+            for (CbrAttraction attraction : day.getAttractions()) {
+                txt = txt + "<br>" + attraction.getName();
+                if (check) {
+                    attList.add(attraction);
+                    t = AttractionXAttractionDAO.instance.findDist(attraction, prevAttraction);
 
-                    txt = txt + "&nbsp;&nbsp;<font color=\"green\"> Travelling Time to Here = " + Integer.toString(t.get(0).getBusTime()) + " mins </font> ";
+                    txt = txt + "&nbsp;&nbsp;<font color=\"green\"> Travelling Time to Here = " + (t.get(0).getBusTime()) + " mins </font> ";
                 }
-                txt = txt + "&nbsp;<font color=\"blue\"> Visit Duration = " + dxa.getFkAttraction().getVisitDuration() + " mins </font> ";
+                txt = txt + "&nbsp;<font color=\"blue\"> Visit Duration = " + attraction.getVisitDuration() + " mins </font> ";
                 check = true;
-                prevdxa = dxa;
+                prevAttraction = attraction;
             }
         }
-        tc = new TravellingCase(cases);
-
+        
         txt += "</html>";
         this.jLabel3.setText(txt);
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -271,58 +263,48 @@ public class retain_UI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-      this.dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jCheckBox1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBox1StateChanged
-        if(this.jCheckBox1.isSelected()){
+        if (this.jCheckBox1.isSelected()) {
             this.jSlider1.setVisible(true);
             this.jLabel1.setVisible(true);
             this.jLabel4.setVisible(true);
-        }
-        else{
+        } else {
             this.jSlider1.setVisible(false);
             this.jLabel1.setVisible(false);
             this.jLabel4.setVisible(false);
-        } 
+        }
     }//GEN-LAST:event_jCheckBox1StateChanged
 
     private void jCheckBox1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jCheckBox1PropertyChange
-
     }//GEN-LAST:event_jCheckBox1PropertyChange
 
     private void jCheckBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox1MouseClicked
-
     }//GEN-LAST:event_jCheckBox1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(jCheckBox1.isSelected()){
-            retain rtn = new retain(jSlider1.getValue(),this.tc,similarities,a);
-        }
-        else{
-            retain rtn = new retain(this.tc,similarities,a);
+        if (jCheckBox1.isSelected()) {
+            retain rtn = new retain(jSlider1.getValue(), this.target, similarities, a);
+        } else {
+            retain rtn = new retain(this.target, similarities, a);
         }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jSlider1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSlider1PropertyChange
-        
-
     }//GEN-LAST:event_jSlider1PropertyChange
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         this.jLabel4.setText((Integer.toString(jSlider1.getValue()) + "%"));
     }//GEN-LAST:event_jSlider1StateChanged
-
     /**
      * @param args the command line arguments
      */
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
@@ -334,22 +316,14 @@ public class retain_UI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void getDistances() {
-        Library library = Library.load();
-//        Library library = new Library();
-//        library.constructAttributes();
-//        library.constructTree();
-//        library.save();
-        a =  library.getTree();
-         while(a.hasNext()){
-            a=a.getNext(tc);
+        a = library.getTree();
+        while (a.hasNext()) {
+            a = a.getNext(target);
         }
-        clist=library.getTree().getCases();
-        clist=a.getCases();
+        clist = library.getTree().getCases();
+        clist = a.getCases();
         RetrievalSimilarityAssessment rsa = new RetrievalSimilarityAssessment(library, clist, target);
-        
-        similarities =rsa.computeSimilarity();
+
+        similarities = rsa.computeSimilarity();
     }
-
-
 }
-
