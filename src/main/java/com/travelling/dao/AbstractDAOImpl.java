@@ -5,6 +5,8 @@
 package com.travelling.dao;
 
 import com.travelling.entity.CbrCase;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -14,6 +16,8 @@ import java.util.Map;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
@@ -36,12 +40,27 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 
     Class<T> type;
     protected EntityManagerFactory entityManagerFactory;
+    
+    private static Properties properties;
+    
+    static {
+        Properties p;
+        try {
+            p = new Properties();
+            p.load(new FileInputStream("db.properties"));
+            properties = p;
+        } catch (IOException ex) {
+            Logger.getLogger(AbstractDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Database properties not set!");
+            properties = null;
+        }
+    }
 
     public AbstractDAOImpl() {
         Type t = getClass().getGenericSuperclass();
         ParameterizedType pt = (ParameterizedType) t;
         type = (Class) pt.getActualTypeArguments()[0];
-        entityManagerFactory = Persistence.createEntityManagerFactory("travelling");
+        entityManagerFactory = Persistence.createEntityManagerFactory("travelling", properties);
     }
 
     @Override

@@ -113,7 +113,7 @@ public class Reuse implements Constants {
         
         for (i = 0; i < retrievedCases.size(); i++) {
             tCase = retrievedCases.get(i);
-            if ( tCase.getSuccessRatio() > POSITIVE_THRESHOLD ) {
+            if ( tCase.getSuccessRatio() >= POSITIVE_THRESHOLD ) {
                 positiveCases.add(tCase);
             }
             else if ( tCase.getSuccessRatio() < NEGATIVE_THRESHOLD ) {
@@ -609,13 +609,13 @@ public class Reuse implements Constants {
             
             sort();            
             selection();
-            System.out.print(generation + ": " + population.size() + " " + population.get(0).getFitness() + " ");
+            //System.out.print(generation + ": " + population.size() + " " + population.get(0).getFitness() + " ");
             
             int f = 0;
             for (int i = 0; i < population.size(); i++) {
                 f+= population.get(i).getFitness();
             }
-            System.out.println((double)f/population.size());
+            //System.out.println((double)f/population.size());
             
             // Restart
             if ( generation == 500 && population.get(0).getFitness() > INVALID_PENALTY ) {

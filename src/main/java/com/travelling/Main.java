@@ -6,6 +6,8 @@ package com.travelling;
 
 import com.travelling.UI.InputUI;
 import com.travelling.library.Library;
+import java.io.FileInputStream;
+import java.util.Properties;
 
 /**
  *

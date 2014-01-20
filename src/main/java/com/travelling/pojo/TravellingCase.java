@@ -35,7 +35,7 @@ public class TravellingCase implements Case{
     private Date endTime;
     private Integer money;
     private Integer numberOfDays;
-    private Double successRatio;
+    private Double successRatio = 50.;
     private Map<CbrCategory, Double> preferences = new HashMap<>();
     private List<Day> days = new LinkedList<>();
     
@@ -44,7 +44,7 @@ public class TravellingCase implements Case{
     }
     
     public TravellingCase(CbrCase c) {
-        successRatio = c.getSuccessRatio();
+        if (c.getSuccessRatio() != null) successRatio = c.getSuccessRatio();
         id = c.getId();
         startTime = c.getStartTime();
         endTime = c.getEndTime();

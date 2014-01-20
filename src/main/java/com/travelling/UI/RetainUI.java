@@ -61,6 +61,7 @@ public class RetainUI extends javax.swing.JFrame {
         this.jLabel1.setVisible(false);
         this.jLabel4.setVisible(false);
         attList = new LinkedList<CbrAttraction>();
+        this.target = tc;
         setText(tc);
         getGoogleAPI();
         getDistances();
@@ -108,12 +109,12 @@ public class RetainUI extends javax.swing.JFrame {
         List<Day> days = target.getDays();
 
         CbrAttraction prevAttraction = null;
-        boolean check = false;
-
+        
         List<CbrAttractionXAttraction> t = new LinkedList<CbrAttractionXAttraction>();
         for (int k = 0; k < days.size(); k++) {
             Day day = days.get(k);
             txt = txt + "<br><font color=\"red\">Day " + (k + 1) + "</font>";
+            boolean check = false;
             for (CbrAttraction attraction : day.getAttractions()) {
                 txt = txt + "<br>" + attraction.getName();
                 if (check) {

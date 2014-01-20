@@ -41,9 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public class CbrCase implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
-    @NotNull
     @Column(name = "success_ratio")
-    private double successRatio;
+    private Double successRatio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "days")
@@ -157,11 +156,11 @@ public class CbrCase implements Serializable {
         this.days = days;
     }
 
-    public double getSuccessRatio() {
+    public Double getSuccessRatio() {
         return successRatio;
     }
 
-    public void setSuccessRatio(double successRatio) {
+    public void setSuccessRatio(Double successRatio) {
         this.successRatio = successRatio;
     }
     
