@@ -106,7 +106,7 @@
                 </executions>
 
                 <configuration>
-                    <mainClass>com.travelling.App</mainClass>
+                    <mainClass>com.travelling.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
